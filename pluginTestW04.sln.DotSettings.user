@@ -1,0 +1,21 @@
+﻿<wpf:ResourceDictionary xml:space="preserve" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:s="clr-namespace:System;assembly=mscorlib" xmlns:ss="urn:shemas-jetbrains-com:settings-storage-xaml" xmlns:wpf="http://schemas.microsoft.com/winfx/2006/xaml/presentation">
+	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
+  &lt;Assembly Path="e:\Projects\pluginTestW04\packages\JetBrains.Platform.Core.Shell.104.0.20151218.121345\DotFiles\JetBrains.Platform.Shell.dll" /&gt;&#xD;
+&lt;/AssemblyExplorer&gt;</s:String>
+	
+	<s:Boolean x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/@KeyIndexDefined">True</s:Boolean>
+	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/DefaultAction/@EntryValue">run</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/Method/Method/@EntryValue">pluginTestW04.Utils.GetInstances</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/Method/PlatformType/@EntryValue">x86</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/Method/PlatformVersion/@EntryValue">v4_5</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/Method/WorkingDirectory/@EntryValue">pluginTestW04\bin\Debug</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/Name/@EntryValue">GetInstances</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/ProjectGuid/@EntryValue">40E57431A585C74F81475FDEA22563DF</s:String>
+	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/Type/@EntryValue">method</s:String>
+	
+	
+	
+	
+	
+	
+	</wpf:ResourceDictionary>

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+	<metadata>
+		<id>huy.pluginTestW04</id>
+		<version>0.0.2</version>
+		<authors>Me</authors>
+		<owners>Me</owners>
+		<requireLicenseAcceptance>false</requireLicenseAcceptance>
+		<description>Test R# plugin</description>		
+		<dependencies>
+			<dependency id="Wave" version="4.0" />
+		</dependencies>
+	</metadata>
+	<files>
+		<file src="bin\Debug\pluginTestW04.dll" target="dotFiles\" />
+		<file src="bin\Debug\pluginTestW04.pdb" target="dotFiles\" />
+	</files>
+</package>
