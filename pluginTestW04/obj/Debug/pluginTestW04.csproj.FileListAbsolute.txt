@@ -43,3 +43,9 @@ e:\Projects\pluginTestW04\pluginTestW04\bin\Debug\WpfContrib.xml
 e:\Projects\pluginTestW04\pluginTestW04\obj\Debug\pluginTestW04.csprojResolveAssemblyReference.cache
 e:\Projects\pluginTestW04\pluginTestW04\obj\Debug\pluginTestW04.dll
 e:\Projects\pluginTestW04\pluginTestW04\obj\Debug\pluginTestW04.pdb
+e:\Projects\pluginTestW04\pluginTestW04\bin\Debug\tutorialUI.dll
+e:\Projects\pluginTestW04\pluginTestW04\bin\Debug\tutorialUI.pdb
+e:\Projects\pluginTestW04\pluginTestW04\bin\Debug\Microsoft.VisualStudio.OLE.Interop.dll
+e:\Projects\pluginTestW04\pluginTestW04\bin\Debug\Microsoft.VisualStudio.TextManager.Interop.dll
+e:\Projects\pluginTestW04\pluginTestW04\bin\Debug\Microsoft.VisualStudio.OLE.Interop.xml
+e:\Projects\pluginTestW04\pluginTestW04\bin\Debug\Microsoft.VisualStudio.TextManager.Interop.xml

@@ -6,6 +6,7 @@ using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.UI.ActionsRevised;
 using JetBrains.Util;
+using tutorialUI;
 
 namespace pluginTestW04
 {    
@@ -57,7 +58,7 @@ namespace pluginTestW04
 
             solutionStateTracker.BeforeSolutionClosed.Advise(lifetime, () =>
             {
-                MessageBox.ShowMessageBox("I'm dead!!!", MbButton.MB_OK,
+                MessageBox.ShowMessageBox("I'm dead!!! SolutionStateTracker", MbButton.MB_OK,
                     MbIcon.MB_ICONASTERISK);
                 Utils.UnloadTutorial(globalOptions);
             });
@@ -67,6 +68,9 @@ namespace pluginTestW04
         private static void RunTutorial()
         {
             MessageBox.ShowMessageBox("The solution is opened. We are ready to start!", MbButton.MB_OK, MbIcon.MB_ICONASTERISK);
-        }
-    }
+
+            var wnd = new TutorialWindow();
+            wnd.Show();
+        }       
+    }    
 }
