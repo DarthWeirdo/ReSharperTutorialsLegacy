@@ -24,14 +24,16 @@ namespace tutorialUI
         {
             InitializeComponent();
 
-            this.Loaded += OnLoaded;
+            Loaded += OnLoaded;
 
 
         }
 
         private void OnLoaded(object sender, RoutedEventArgs routedEventArgs)
         {
-            this.Owner = Application.Current.MainWindow;
+            Owner = Application.Current.MainWindow;
+            Width = Owner.Width/3;
+            Height = Owner.Height/4;
             Left = Owner.Left + (Owner.Width - ActualWidth) - 30;
             Top = Owner.Top + (Owner.Height - ActualHeight) - 30;
         }        

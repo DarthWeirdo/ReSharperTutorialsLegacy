@@ -2,7 +2,7 @@
 <package>
 	<metadata>
 		<id>huy.pluginTestW04</id>
-		<version>0.0.2</version>
+		<version>0.0.4</version>
 		<authors>Me</authors>
 		<owners>Me</owners>
 		<requireLicenseAcceptance>false</requireLicenseAcceptance>
@@ -14,5 +14,7 @@
 	<files>
 		<file src="bin\Debug\pluginTestW04.dll" target="dotFiles\" />
 		<file src="bin\Debug\pluginTestW04.pdb" target="dotFiles\" />
+		<file src="bin\Debug\tutorialUI.dll" target="dotFiles\" />
+		<file src="Tutorials\**\*.*" target="..\Tutorials\" />
 	</files>
 </package>

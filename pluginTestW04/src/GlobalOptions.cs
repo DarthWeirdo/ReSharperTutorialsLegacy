@@ -1,4 +1,5 @@
-﻿using JetBrains.Annotations;
+﻿using System.IO;
+using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.DataFlow;
 
@@ -8,19 +9,16 @@ namespace pluginTestW04
     
     [ShellComponent]
     public class GlobalOptions
-    {
-        public TutorialId? Id { get; set; }
-        public string Path { get; set; }
+    {        
+        public string Tutorial1Path;
 
         public GlobalOptions([NotNull]Lifetime lifetime)
-        {
-            Id = TutorialId.None;
-            Path = "";
-        }
-    }
+        {        
+            var commonTutorialPath = Utils.GetTutorialsPath();
+            if (commonTutorialPath == null)
+                throw new DirectoryNotFoundException("Unable to find the folder with sample solutions. Please reinstall the plugin");
 
-    public static class Constants
-    {
-        public static string Tutorial1Path = "e:\\myproject\\MassFileProcessing.sln";
-    }
+            Tutorial1Path = commonTutorialPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
+        }
+    }    
 }

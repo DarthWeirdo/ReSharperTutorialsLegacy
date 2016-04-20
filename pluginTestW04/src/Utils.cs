@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
 using EnvDTE;
@@ -12,26 +13,31 @@ namespace pluginTestW04
 {    
 
     public static class Utils
-    {        
-        public static void OpenVsSolution(IDataContext context, string path, TutorialId id)
-        {           
-            var globalOptions = context.GetComponent<GlobalOptions>();
-            globalOptions.Id = id;
-            globalOptions.Path = path;
+    {
 
+        public static string GetTutorialsPath()
+        {
+            var pluginsPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\JetBrains\\plugins";
+            var dirs = Directory.GetDirectories(pluginsPath);
+            string result = null;
+
+            foreach (var dir in dirs.Where(dir => dir.Contains("huy.pluginTestW04")))
+            {
+                result = dir + "\\Tutorials";
+            }
+
+            return result;
+        }
+
+        public static void OpenVsSolution(IDataContext context, string path)
+        {                       
             var vsInstance = GetCurrentVsInstance();
-                        
-            MessageBox.ShowMessageBox(globalOptions.Id.ToString() + " | " + 
-                globalOptions.Path, MbButton.MB_OK, MbIcon.MB_ICONASTERISK);
 
             vsInstance.ExecuteCommand("File.OpenProject", path);
-
         }
 
         public static void UnloadTutorial(GlobalOptions globalOptions)
-        {
-            globalOptions.Id = TutorialId.None;
-            globalOptions.Path = "noPath";
+        {            
         }
 
         private static IEnumerable<DTE> EnumVsInstances()

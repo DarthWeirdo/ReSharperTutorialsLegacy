@@ -9,7 +9,7 @@
         
         Title="MainWindow" Height="200" Width="400" Topmost="True" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
         Background="Transparent" WindowStartupLocation="Manual"
-        MouseDown="Window_MouseDown"       
+        MouseDown="Window_MouseDown"        
 >
 
 
