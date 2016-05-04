@@ -1,0 +1,34 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<tutorial>
+  <currentStep>1</currentStep>
+  
+  <intro>
+    <Run FontSize="36">Tutorial 1. Essential Shortcuts</Run>
+    <LineBreak/>
+    <Run  FontSize="14">
+      In this tutorial you will learn a number of essential ReSharper shortcuts
+      that you will probably use most often in your day-to-day work.
+    </Run>
+  </intro>
+
+  <steps>
+    <step li="1" file="1-AltEnter.cs" treenode="somestring" buttons="next">
+      <text>
+        <Run FontSize="20">Alt+Enter</Run> <LineBreak/>
+        Used to apply quick fixes to inspections ("squigglies"), or apply context specific actions, depending on location of text caret. Also allows searching and applying all ReSharper commands direct from the menu. <LineBreak/>
+        Icon is displayed in gutter margin on left of editor, e.g. yellow lightbulb to fix warning, red light bulb to fix error, hammer to context action, etc.
+      </text>
+    </step>
+    
+    <step li="2" file="1-AltEnter.cs" treenode="somestring" buttons="next">
+      <text>
+        <Run FontSize="20">Apply QuickFix for an inspection</Run><LineBreak/><LineBreak/>
+        The <Run FontFamily="Consolas">badlyNamedClass</Run> class doesn't match ReSharper's naming style! Let's fix this:<LineBreak/>
+        1. Place text caret on "squiggly". Note the lightbulb in the margin on the left.<LineBreak/>
+        2. Click the light bulb, or hit <Bold>Alt+Enter</Bold>.<LineBreak/>
+        3. Select <Bold>Rename to 'BadlyNamedClass'</Bold> to apply the fix.<LineBreak/>
+      </text>
+    </step>
+  </steps>
+  
+</tutorial>
