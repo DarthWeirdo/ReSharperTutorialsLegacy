@@ -51,3 +51,5 @@ e:\Projects\pluginTestW04\tutorialUI\obj\Debug\tutorialUI.dll
 e:\Projects\pluginTestW04\tutorialUI\obj\Debug\tutorialUI.pdb
 e:\Projects\pluginTestW04\tutorialUI\obj\Debug\src\TutorialWindow.g.cs
 e:\Projects\pluginTestW04\tutorialUI\obj\Debug\src\TutorialWindow.baml
+e:\Projects\pluginTestW04\tutorialUI\obj\Debug\src\TitleWindow.g.cs
+e:\Projects\pluginTestW04\tutorialUI\obj\Debug\src\TitleWindow.baml

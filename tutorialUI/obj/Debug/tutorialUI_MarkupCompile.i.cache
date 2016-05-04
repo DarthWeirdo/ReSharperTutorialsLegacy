@@ -10,11 +10,11 @@ none
 false
 DEBUG;TRACE
 
-1205468929
+2-828789700
 
-6-1061811052
+9-1327393501
 382070161070
-src\TutorialWindow.xaml;
+src\TitleWindow.xaml;src\TutorialWindow.xaml;
 
-True
+False
 

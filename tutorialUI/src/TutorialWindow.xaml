@@ -3,13 +3,12 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:tutorialUI"
-        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="tutorialUI.TutorialWindow"
+        x:Class="tutorialUI.TutorialWindow"
         mc:Ignorable="d"
         
         Title="MainWindow" Height="200" Width="400" Topmost="True" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
         Background="Transparent" WindowStartupLocation="Manual"
-        MouseDown="Window_MouseDown"        
+        MouseDown="Window_MouseDown" 
 >
 
 
@@ -22,6 +21,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+
+        <FontFamily x:Key="MainFont">Verdana</FontFamily>
 
 
         <Style x:Key="StyleButton" TargetType="Button">
@@ -73,7 +74,8 @@
         </Style>
     </Window.Resources>
 
-    <Border Background="GhostWhite" CornerRadius="5">
+    <Border Background="GhostWhite" CornerRadius="4" BorderBrush="#A3383838" BorderThickness="1">
+
 
         <Grid HorizontalAlignment="Stretch" VerticalAlignment="Stretch">
 
@@ -117,10 +119,20 @@
             <FlowDocumentScrollViewer x:Name="TutorialTextPresenter" Grid.Row="0" Grid.Column="0" Margin="10 10 10 10"
                      VerticalScrollBarVisibility="Auto"
                      Height="Auto" Width="Auto" HorizontalAlignment="Stretch" VerticalAlignment="Stretch"
-                   FontSize="14">
+                   FontSize="14" FontFamily="{StaticResource MainFont}">
+                
                 <FlowDocument>
-                    <Paragraph FontSize="36">Hello, world!</Paragraph>
-                    <Paragraph FontStyle="Italic" TextAlignment="Left" FontSize="14" Foreground="Gray">The ultimate programming greeting!</Paragraph>
+                    <BlockUIContainer Padding="0 0 0 0">
+                        <TextBlock x:Name="TextContent" Margin="0 0 0 0" TextWrapping="WrapWithOverflow"
+                                   HorizontalAlignment="Stretch" VerticalAlignment="Stretch" >
+<!--                            <TextBlock.Resources>-->
+<!--                                <Style x:Key="Code" TargetType="Run">-->
+<!--                                    <Setter Property="FontFamily" Value="Consolas"/>-->
+<!--                                </Style>-->
+<!--                            </TextBlock.Resources>-->
+                            No more text for you!!!
+                        </TextBlock>
+                    </BlockUIContainer>
                 </FlowDocument>
             </FlowDocumentScrollViewer>
 
@@ -131,7 +143,7 @@
                 Save&amp;Close 
             </Button>
         
-            <Button x:Name="BtnPrev" Style="{StaticResource StyleButton}" Grid.Row="1" Margin="0,0,90,10">Previous
+            <Button x:Name="BtnPrev" Style="{StaticResource StyleButton}" Grid.Row="1" Margin="0,0,90,10" Visibility="Hidden">Previous
             </Button>
 
             <Button x:Name="BtnNext" Style="{StaticResource StyleButton}" Grid.Row="1" Margin="10 10 10 10">Next

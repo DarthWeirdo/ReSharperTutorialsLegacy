@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.DataFlow;
@@ -11,14 +12,16 @@ namespace pluginTestW04
     public class GlobalOptions
     {        
         public string Tutorial1Path;
+        public string Tutorial1ContentPath;
 
         public GlobalOptions([NotNull]Lifetime lifetime)
         {        
-            var commonTutorialPath = Utils.GetTutorialsPath();
+            var commonTutorialPath = VsCommunication.GetTutorialsPath();
             if (commonTutorialPath == null)
                 throw new DirectoryNotFoundException("Unable to find the folder with sample solutions. Please reinstall the plugin");
 
             Tutorial1Path = commonTutorialPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
-        }
-    }    
+            Tutorial1ContentPath = commonTutorialPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";
+        }        
+    }
 }

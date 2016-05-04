@@ -16,5 +16,6 @@
 		<file src="bin\Debug\pluginTestW04.pdb" target="dotFiles\" />
 		<file src="bin\Debug\tutorialUI.dll" target="dotFiles\" />
 		<file src="Tutorials\**\*.*" target="..\Tutorials\" />
+		<file src="TutorialsContent\**\*.*" target="..\Tutorials\Content\" />
 	</files>
 </package>
