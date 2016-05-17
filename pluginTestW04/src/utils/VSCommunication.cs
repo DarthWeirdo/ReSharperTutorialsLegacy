@@ -15,13 +15,23 @@ namespace pluginTestW04
     public static class VsCommunication
     {
 
+        public const string PluginName = "huy.pluginTestW04";
+
+        public static void FindTextInCurrentDocument(string text)
+        {
+            var vsInstance = GetCurrentVsInstance();
+            var selection = vsInstance.ActiveDocument.Selection as TextSelection;
+            selection?.FindText(text);
+        }
+
+
         public static string GetTutorialsPath()
         {
             var pluginsPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\JetBrains\\plugins";
             var dirs = Directory.GetDirectories(pluginsPath);
             string result = null;
 
-            foreach (var dir in dirs.Where(dir => dir.Contains("huy.pluginTestW04")))
+            foreach (var dir in dirs.Where(dir => dir.Contains(PluginName)))
             {
                 result = dir + "\\Tutorials";
             }
@@ -43,7 +53,7 @@ namespace pluginTestW04
         private static IEnumerable<DTE> EnumVsInstances()
         {            
             IRunningObjectTable rot;
-            var retVal = GetRunningObjectTable(0, out rot);                
+            int retVal = GetRunningObjectTable(0, out rot);                
             if (retVal == 0)
             {
                 IEnumMoniker enumMoniker;

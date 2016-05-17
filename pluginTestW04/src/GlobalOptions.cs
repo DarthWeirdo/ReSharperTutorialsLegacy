@@ -6,7 +6,7 @@ using JetBrains.DataFlow;
 
 namespace pluginTestW04
 {
-    public enum TutorialId { None, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Tutorial5 }
+    public enum TutorialId { None, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Tutorial5 }       
     
     [ShellComponent]
     public class GlobalOptions

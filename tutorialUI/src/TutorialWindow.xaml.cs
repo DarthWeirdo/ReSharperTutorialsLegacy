@@ -1,8 +1,10 @@
 ﻿using System;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Input;
+using System.Windows.Interop;
 using System.Windows.Media;
 
 
@@ -13,6 +15,16 @@ namespace tutorialUI
     /// </summary>
     public partial class TutorialWindow
     {
+
+        private const int WS_EX_NOACTIVATE = 0x08000000;
+        private const int GWL_EXSTYLE = -20;
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int GetWindowLong(IntPtr hwnd, int index);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto, SetLastError = true)]
+        private static extern int SetWindowLong(IntPtr hwnd, int index, int newStyle);
+
         private string _tutorialText;
 
         public TutorialWindow()
@@ -23,7 +35,16 @@ namespace tutorialUI
             Width = Owner.Width / 3;
             Height = Owner.Height / 4;
             Left = Owner.Left + (Owner.Width - ActualWidth) - 30;
-            Top = Owner.Top + (Owner.Height - ActualHeight) - 30;            
+            Top = Owner.Top + (Owner.Height - ActualHeight) - 30;
+
+            Focusable = false;
+
+            SourceInitialized += (s, e) =>
+            {
+                var interopHelper = new WindowInteropHelper(this);
+                int exStyle = GetWindowLong(interopHelper.Handle, GWL_EXSTYLE);
+                SetWindowLong(interopHelper.Handle, GWL_EXSTYLE, exStyle | WS_EX_NOACTIVATE);
+            };
         }
 
         /// <summary>

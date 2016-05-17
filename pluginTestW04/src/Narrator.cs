@@ -3,8 +3,16 @@ using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
+using JetBrains.Application;
 using JetBrains.Application.DataContext;
+using JetBrains.DataFlow;
+using JetBrains.DocumentManagers;
+using JetBrains.IDE;
+using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
+using JetBrains.ReSharper.Psi.Files;
+using JetBrains.TextControl;
+using JetBrains.UI.Application;
 using JetBrains.VsIntegration.Menu;
 using tutorialUI;
 
@@ -13,7 +21,8 @@ namespace pluginTestW04
 
     public class Narrator
     {
-        private readonly IDataContext _context; // context to get PSI tree
+        private readonly IDataContext _context; // probably we don't need context here as it is actual only on the moment of creation        
+        private SourceCodeNavigator _codeNavigator;
         private readonly TutorialWindow _tutorialWindow;
 
         private Dictionary<int, TutorialStep> _steps;        
@@ -22,14 +31,21 @@ namespace pluginTestW04
 
         public TutorialStep CurrentStep;  
 
-        public Narrator(string contentPath, IDataContext context)
+        public Narrator(string contentPath, Lifetime lifetime, IDataContext context, ISolution solution, IPsiFiles psiFiles,
+                                  TextControlManager textControlManager, IShellLocks shellLocks, IEditorManager editorManager, 
+                                  DocumentManager documentManager, IUIApplication environment)
         {
             _context = context;
+            
+            _codeNavigator = new SourceCodeNavigator(lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, 
+                documentManager, environment);
+
             _tutorialWindow = new TutorialWindow();
             _steps = new Dictionary<int, TutorialStep>();            
             LoadTutorialContent(contentPath);
 
-            _currentStepId = 1;  // TODO: here must be some logic on checking current step (if a user've already proceeded to some step during previous sessions)
+            // TODO: here must be some logic on checking current step (if a user've already proceeded to some step during previous sessions)
+            _currentStepId = 1;  
             CurrentStep = _steps[_currentStepId];
 
 
@@ -62,7 +78,7 @@ namespace pluginTestW04
 
         private void LoadTutorialContent(string contentPath)
         {
-            // TODO: Probably we should so this async if content loading is too long + display progress
+            // TODO: Probably we should do this async if content loading is too long + display progress
             _steps = TutorialXmlReader.ReadTutorialSteps(contentPath);
         }
 
@@ -86,6 +102,9 @@ namespace pluginTestW04
         {
             // TODO: Preparation - Open required cs file, move cursor to required line, prepare to post-step activities (subscrive to particular event, etc.)
             ShowStepText(stepId);
+
+            _codeNavigator.TestPsi();
+            
         }
 
         private void ShowStepText(int stepId)

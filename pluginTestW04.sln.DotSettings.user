@@ -4,6 +4,7 @@
 	<s:String x:Key="/Default/Environment/AssemblyExplorer/XmlDocument/@EntryValue">&lt;AssemblyExplorer&gt;&#xD;
   &lt;Assembly Path="e:\Projects\pluginTestW04\packages\JetBrains.Platform.Core.Shell.104.0.20151218.121345\DotFiles\JetBrains.Platform.Shell.dll" /&gt;&#xD;
 &lt;/AssemblyExplorer&gt;</s:String>
+	<s:Boolean x:Key="/Default/Housekeeping/Search/HighlightUsagesHintUsed/@EntryValue">True</s:Boolean>
 	
 	<s:Boolean x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/@KeyIndexDefined">True</s:Boolean>
 	<s:String x:Key="/Default/RunConfigs/Config/=A53FB3D281C61F44AE7566861E2B30D4/DefaultAction/@EntryValue">run</s:String>

@@ -2,10 +2,17 @@
 using System.IO;
 using JetBrains.ActionManagement;
 using JetBrains.Annotations;
+using JetBrains.Application;
 using JetBrains.Application.DataContext;
+using JetBrains.Application.Threading;
 using JetBrains.DataFlow;
+using JetBrains.DocumentManagers;
+using JetBrains.IDE;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Psi.Files;
+using JetBrains.TextControl;
 using JetBrains.UI.ActionsRevised;
+using JetBrains.UI.Application;
 using JetBrains.Util;
 using tutorialUI;
 
@@ -16,9 +23,10 @@ namespace pluginTestW04
     {
         private Narrator _narrator;
 
-        public TutorialRunner([NotNull] Lifetime lifetime,
+        public TutorialRunner([NotNull] Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,
                                   [NotNull] ISolutionStateTracker solutionStateTracker,
-                                  [NotNull] GlobalOptions globalOptions,
+                                  [NotNull] GlobalOptions globalOptions, TextControlManager textControlManager, IShellLocks shellLocks,
+                                  IEditorManager editorManager, DocumentManager documentManager, IUIApplication environment,
                                   IDataContext context)
         {
             if (lifetime == null)
@@ -34,15 +42,19 @@ namespace pluginTestW04
             {
                 _narrator?.SaveAndClose();
             });
-
+                            
             // TODO: replace with foreach; make List<> globalOptions.TutorialPaths
             if (VsCommunication.GetCurrentSolutionPath() == globalOptions.Tutorial1Path)
-                    solutionStateTracker.AfterSolutionOpened.Advise(lifetime, solution => RunTutorial(globalOptions.Tutorial1ContentPath, context));            
+                    solutionStateTracker.AfterSolutionOpened.Advise(lifetime, sol => RunTutorial(globalOptions.Tutorial1ContentPath, lifetime,
+                        context, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager, environment));            
         }
 
-        private void RunTutorial(string contentPath, IDataContext context)
+        private void RunTutorial(string contentPath, Lifetime lifetime, IDataContext context, ISolution solution, IPsiFiles psiFiles,                                 
+                                  TextControlManager textControlManager, IShellLocks shellLocks,
+                                  IEditorManager editorManager, DocumentManager documentManager, IUIApplication environment)
         {
-            _narrator = new Narrator(contentPath, context);
+            _narrator = new Narrator(contentPath, lifetime, context, solution, psiFiles, textControlManager, shellLocks, editorManager, 
+                            documentManager, environment);
             _narrator.Start();
         }   
     }
