@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Controls;
 using System.Xml;
@@ -12,6 +13,39 @@ namespace pluginTestW04
     public static class TutorialXmlReader
     {
 
+        public static string ReadCurrentStep(string path)
+        {
+            using (var reader = XmlReader.Create(new StreamReader(path)))
+            {
+                while (reader.ReadToFollowing("currentStep"))
+                {
+                    return reader.ReadElementContentAsString();                    
+                }
+            }
+
+            return "Missing tutorial content. Please reinstall the plugin!";
+        }
+
+        public static void WriteCurrentStep(string path, string value)
+        {            
+            var doc = new XmlDocument();
+            doc.Load(path);
+            var node = doc.SelectSingleNode("/tutorial/" + "currentStep");
+            if (node != null)
+            {
+                node.InnerText = value;
+            }
+            else
+            {
+                XmlNode root = doc.DocumentElement;
+                var elem = doc.CreateElement("currentStep");
+                elem.InnerText = value;
+                root.AppendChild(elem);
+            }
+            doc.Save(path);
+            doc = null;          
+        }
+
         public static string ReadIntro(string path)
         {
             using (var reader = XmlReader.Create(new StreamReader(path)))
@@ -22,11 +56,7 @@ namespace pluginTestW04
                 }
             }
 
-            return "Missing tutorial content. Please reinstall the plugin!";
-
-            //var document = XDocument.Parse(path);
-            //var xElement = document.Element("tutorial");
-            //return xElement?.Element("intro").Value ?? "Missing tutorial content. Please reinstall the plugin";
+            return "Missing tutorial content. Please reinstall the plugin!";            
         }
 
         
@@ -60,4 +90,6 @@ namespace pluginTestW04
             return result;
         }
     }
-}
+
+        
+    }

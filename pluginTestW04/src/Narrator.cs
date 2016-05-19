@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Windows.Controls;
 using JetBrains.Application;
 using JetBrains.Application.DataContext;
@@ -19,6 +20,7 @@ namespace pluginTestW04
         private readonly IDataContext _context; // probably we don't need context here as it is actual only on the moment of creation        
         private readonly SourceCodeNavigator _codeNavigator;
         private readonly TutorialWindow _tutorialWindow;
+        private readonly string _contentPath;
 
         private Dictionary<int, TutorialStep> _steps;        
         private int _currentStepId;  
@@ -32,16 +34,15 @@ namespace pluginTestW04
                                   DocumentManager documentManager, IUIApplication environment)
         {
             _context = context;
-            
+            _contentPath = contentPath;            
             _codeNavigator = new SourceCodeNavigator(lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, 
                 documentManager, environment);
-
             _tutorialWindow = new TutorialWindow();
             _steps = new Dictionary<int, TutorialStep>();            
             LoadTutorialContent(contentPath);
 
-            // TODO: here must be some logic on checking current step (if a user've already proceeded to some step during previous sessions)
-            _currentStepId = 1;              
+            // TODO: here must be some logic on checking current step (if a user've already proceeded to some step during previous sessions)     
+            _currentStepId = Convert.ToInt32(TutorialXmlReader.ReadCurrentStep(contentPath));              
 
             // TODO: Implement subscribing through the TutorialWindow.Subscribe()
             var btnNext =  (Button) _tutorialWindow.FindName("BtnNext");
@@ -87,6 +88,7 @@ namespace pluginTestW04
         public void SaveAndClose()
         {
             // TODO: Implement saving current tutorial state
+            TutorialXmlReader.WriteCurrentStep(_contentPath, _currentStepId.ToString());
             CloseWindow();
             // TODO: close solution, unsubscribe
 
