@@ -49,7 +49,7 @@ namespace pluginTestW04
         public SourceCodeNavigator(Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,
                                   TextControlManager textControlManager, IShellLocks shellLocks,
                                   IEditorManager editorManager, DocumentManager documentManager, IUIApplication environment)
-        {
+        {            
             _lifetime = lifetime;
             _solution = solution;
             _psiFiles = psiFiles;
@@ -67,9 +67,63 @@ namespace pluginTestW04
               () => psiFiles.AfterPsiChanged -= psiChanged);                             
         }
 
+        /// <summary>
+        /// By default, navigates to type definition. if methodName is provided, navigates to a method declaration (first occurrence) 
+        /// within the specified class. If textToFind is provided, navigates to the first text occurrence after class or method declaration.       
+        /// </summary>
+        /// <param name="projectName"></param>
+        /// <param name="fileName"></param>
+        /// <param name="typeName">Required</param>
+        /// <param name="methodName"></param>
+        /// <param name="textToFind"></param>
+        public void Navigate([CanBeNull] string projectName, [NotNull] string fileName, [NotNull] string typeName, [CanBeNull] string methodName,
+            [CanBeNull] string textToFind)
+        {
+            var project = PsiNavigationHelper.GetOpenedProject(Solution);
+
+            if (projectName != null)
+            {
+                project = PsiNavigationHelper.GetProjectByName(Solution, projectName);
+            }
+
+            var file = PsiNavigationHelper.GetCSharpFile(project, fileName);
+
+            if (methodName != null)            
+                PsiNavigationHelper.NavigateToMethod(file, typeName, methodName);            
+            else            
+                PsiNavigationHelper.NavigateToType(file, typeName);
+
+            if (textToFind != null)
+            {
+                VsCommunication.FindTextInCurrentDocument(textToFind);
+            }            
+        }
+
+        public void Navigate(TutorialStep step)
+        {
+            var project = PsiNavigationHelper.GetOpenedProject(Solution);
+
+            if (step.ProjectName != null)
+            {
+                project = PsiNavigationHelper.GetProjectByName(Solution, step.ProjectName);
+            }
+
+            var file = PsiNavigationHelper.GetCSharpFile(project, step.FileName);
+
+            if (step.MethodName != null)
+                PsiNavigationHelper.NavigateToMethod(file, step.TypeName, step.MethodName);
+            else
+                PsiNavigationHelper.NavigateToType(file, step.TypeName);
+
+            if (step.TextToFind != null)
+            {
+                VsCommunication.FindTextInCurrentDocument(step.TextToFind);
+            }
+        }
+
         // TODO: delete this
         public void TestPsi()
-        {
+        {            
             ICSharpFile csFile = null;
             var projects = Solution.GetTopLevelProjects();
 
@@ -77,70 +131,25 @@ namespace pluginTestW04
             {
                 if (project.Name == "Tutorial1_EssentialShortcuts")
                 {
-                    csFile = GetCSharpFile(project, "1-AltEnter.cs");                    
+                    csFile = PsiNavigationHelper.GetCSharpFile(project, "1-AltEnter.cs");                    
                 }                
             }
 
-            var node = GetNodeByFullClrName(csFile, "Tutorial1_EssentialShortcuts.ContextAction");
-            Navigate(node, true);
+            //            var node = GetTypeNodeByFullClrName(csFile, "Tutorial1_EssentialShortcuts.ContextAction");         
+            //            Navigate(node, true);
+
+//            NavigateToMethod(csFile, "Tutorial1_EssentialShortcuts.ContextAction", "FormatString");
+            PsiNavigationHelper.NavigateToType(csFile, "Tutorial1_EssentialShortcuts.ContextAction");
+            VsCommunication.FindTextInCurrentDocument("Hello");
         }
 
-        [CanBeNull]
-        private static IProject GetProjectByName(ISolution solution, string projectName)
-        {
-            var projects = solution.GetTopLevelProjects();
-            return projects.FirstOrDefault(project => project.Name == projectName);
-        }
 
-        [CanBeNull]
-        private static IProject GetOpenedProject(ISolution solution)
-        {
-            var projects = solution.GetTopLevelProjects();
-            return projects.FirstOrDefault(project => project.IsOpened);            
-        }
-
-        [CanBeNull]
-        private static ICSharpFile GetCSharpFile(IProject project, string filename)
-        {
-            IPsiSourceFile file = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename));
-            return file.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault();
-        }
-
-        [CanBeNull]
-        public static IDeclaration GetDeclaration(ITreeNode node)
-        {
-            while (null != node)
-            {
-                var declaration = node as IDeclaration;
-                if (null != declaration)
-                    return declaration;
-                node = node.Parent;
-            }
-            return null;
-        }
-
-        [CanBeNull]
-        public static IDeclaredElement GetDeclaredElement(ITreeNode node)
-        {
-            var declaration = GetDeclaration(node);            
-            return declaration?.DeclaredElement;
-        }
-
-        [CanBeNull]
-        public ITreeNode GetNodeByFullClrName(ICSharpFile file, string name)
-        {
-            var treeNodeList = file.EnumerateTo(file.LastChild);
-
-            return (from treeNode in treeNodeList
-                    let element = GetDeclaredElement(treeNode)
-                    let typeElement = element as ITypeElement
-                    where typeElement != null
-                    where typeElement.GetFullClrName() == name
-                    select treeNode).FirstOrDefault();
-        }                  
-
-
-        public void Navigate(ITreeNode treeNode, bool activate)
+        /// <summary>
+        /// Navigate to any node. Not needed right now, though maybe needed in future.
+        /// </summary>
+        /// <param name="treeNode"></param>
+        /// <param name="activate"></param>
+        private void NavigateToNode(ITreeNode treeNode, bool activate)
         {
             //            if (!IsUpToDate()) return;
             _shellLocks.ExecuteOrQueueReadLock(_lifetime, "Navigate", () =>
@@ -161,48 +170,7 @@ namespace pluginTestW04
                     textControl.Selection.SetRange(range.TextRange);
             });
         }
-
-        // This was the double-click handler in PsiBrowser
-        public void OnPreviewNavigate(TreeModelNode modelNode)
-        {
-            if (!IsUpToDate()) return;
-
-            var dataValue = modelNode.DataValue;
-            _shellLocks.ExecuteOrQueueReadLock(_lifetime, "Navigate", () =>
-            {
-                var range = DocumentRange.InvalidRange;
-                var reference = dataValue as IReference;
-                if (reference != null)
-                {
-                    range = reference.GetDocumentRange();
-                }
-                else
-                {
-                    var node = dataValue as ITreeNode;
-                    if (node != null) range = node.GetDocumentRange();
-                }
-
-                if (range.IsValid())
-                {
-                    var projectFile = _documentManager.TryGetProjectFile(range.Document);
-                    if (projectFile != null)
-                    {
-                        var textControl = _editorManager.OpenProjectFile(projectFile, true);
-                        if (textControl != null)
-                            textControl.Selection.SetRange(range.TextRange);
-                    }
-                }
-
-                var windowContext = Shell.Instance.GetComponent<MainWindowPopupWindowContext>();
-                var options = NavigationOptions.FromWindowContext(windowContext.Source, "Navigate", true);
-                var manager = NavigationManager.GetInstance(Solution);
-
-                manager.Navigate<INavigationProvider<object>, object>(dataValue, options);
-                
-            });
-        }
-
-
+        
         public bool IsUpToDate()
         {
             // PsiTimestamp is a time stamp for PsiFiles - use it to check the current PSI is up to date

@@ -4,30 +4,31 @@ using JetBrains.Annotations;
 namespace pluginTestW04
 {
     public class TutorialStep : INotifyPropertyChanged
-    {
-        // TODO: something with ITreeNode for indicating step position.
-        // probably we should save tree to a separate structure
-        // right after opening a solution. Then somehow match 
-        // node in the tree and each step.
+    {        
+        // TODO: some event? or property subscribed to event that indicates the step is completed.        
 
-        // TODO: some event? or property subscribed to event that indicates the step is completed.
+        private string _text;                
 
-        
+        public int Id { get; }
+        public string ProjectName { get;}
+        public string FileName { get; }
+        public string TypeName { get; }
+        public string MethodName { get; }
+        public string TextToFind { get; }
+        public string Buttons { get; }
 
-        private string _text;
-        private int _li;
-        private string _file;
-        private string _treeNode; // TODO: this must be of some ITreeNode class
-        private string _buttons; // TODO: probably remove this as we'll leave only Next button
-
-        public TutorialStep(int li, string text, string file, string treeNode, string buttons)
+        public TutorialStep(int li, string text, string file, string projectName, string typeName, string methodName, 
+            string textToFind, string buttons)
         {
-            _li = li;
+            Id = li;
             _text = text;
-            _file = file;
-            _treeNode = treeNode;
-            _buttons = buttons;
-        }
+            FileName = file;
+            TypeName = typeName;
+            Buttons = buttons;
+            ProjectName = projectName;
+            MethodName = methodName;
+            TextToFind = textToFind;
+        }        
 
         public string Text
         {
@@ -49,12 +50,7 @@ namespace pluginTestW04
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-
-        public void PrepareIde()
-        {
-            // TODO: here we must do some preparations for the step: Open file and place cursor to a particular line
-            // Probably we can do this not here, but inside Narrator
-        }        
+        
 
         public void CheckStepIsDone()
         {

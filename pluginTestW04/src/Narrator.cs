@@ -1,19 +1,14 @@
 ﻿using System.Collections.Generic;
-using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using JetBrains.Application;
 using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.DocumentManagers;
 using JetBrains.IDE;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Caches2;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
-using JetBrains.VsIntegration.Menu;
 using tutorialUI;
 
 namespace pluginTestW04
@@ -22,14 +17,15 @@ namespace pluginTestW04
     public class Narrator
     {
         private readonly IDataContext _context; // probably we don't need context here as it is actual only on the moment of creation        
-        private SourceCodeNavigator _codeNavigator;
+        private readonly SourceCodeNavigator _codeNavigator;
         private readonly TutorialWindow _tutorialWindow;
 
         private Dictionary<int, TutorialStep> _steps;        
         private int _currentStepId;  
 //        private TextBlock _textPresenter;   // this is a reference to TextBlock on TutorialWindow
 
-        public TutorialStep CurrentStep;  
+        public TutorialStep CurrentStep => _steps[_currentStepId];
+
 
         public Narrator(string contentPath, Lifetime lifetime, IDataContext context, ISolution solution, IPsiFiles psiFiles,
                                   TextControlManager textControlManager, IShellLocks shellLocks, IEditorManager editorManager, 
@@ -45,9 +41,7 @@ namespace pluginTestW04
             LoadTutorialContent(contentPath);
 
             // TODO: here must be some logic on checking current step (if a user've already proceeded to some step during previous sessions)
-            _currentStepId = 1;  
-            CurrentStep = _steps[_currentStepId];
-
+            _currentStepId = 1;              
 
             // TODO: Implement subscribing through the TutorialWindow.Subscribe()
             var btnNext =  (Button) _tutorialWindow.FindName("BtnNext");
@@ -87,7 +81,7 @@ namespace pluginTestW04
             // TODO: Implement restoring previous tutorial state
 
             ShowWindow();
-            ProcessStep(_currentStepId);
+            ProcessStep(CurrentStep);
         }
 
         public void SaveAndClose()
@@ -98,18 +92,18 @@ namespace pluginTestW04
 
         }
 
-        private void ProcessStep(int stepId)
+        private void ProcessStep(TutorialStep step)
         {
             // TODO: Preparation - Open required cs file, move cursor to required line, prepare to post-step activities (subscrive to particular event, etc.)
-            ShowStepText(stepId);
+            ShowStepText(step);
 
-            _codeNavigator.TestPsi();
+            _codeNavigator.Navigate(step);
             
         }
 
-        private void ShowStepText(int stepId)
+        private void ShowStepText(TutorialStep step)
         {
-            _tutorialWindow.TutorialText = _steps[stepId].Text;
+            _tutorialWindow.TutorialText = step.Text;
         }
             
         public void ShowWindow()
@@ -124,22 +118,17 @@ namespace pluginTestW04
 
         public void GoNext()
         {
-            if (_currentStepId < _steps.Count)
-            {
-                _currentStepId++;
-                CurrentStep = _steps[_currentStepId];
-                ProcessStep(_currentStepId);
-            }
+            if (_currentStepId >= _steps.Count) return;
+            _currentStepId++;            
+            ProcessStep(CurrentStep);
 
-            // TODO: raise event that tutorial is over, buttons in _tutorialWindow must be subscribed to this event.
-            
+            // TODO: raise event that tutorial is over, buttons in _tutorialWindow must be subscribed to this event.            
         }
 
         public void GoPrevious()
         {
             // TODO: Probably, remove this at all. This action makes the step inconsistent with the code state!
-            _currentStepId--;
-            CurrentStep = _steps[_currentStepId];
+            _currentStepId--;            
         }
     }
 }

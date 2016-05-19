@@ -12,7 +12,7 @@
   </intro>
 
   <steps>
-    <step li="1" file="1-AltEnter.cs" treenode="somestring" buttons="next">
+    <step li="1" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.badlyNamedClass" buttons="next">
       <text>
         <Run FontSize="20">Alt+Enter</Run> <LineBreak/>
         Used to apply quick fixes to inspections ("squigglies"), or apply context specific actions, depending on location of text caret. Also allows searching and applying all ReSharper commands direct from the menu. <LineBreak/>
@@ -20,7 +20,7 @@
       </text>
     </step>
     
-    <step li="2" file="1-AltEnter.cs" treenode="somestring" buttons="next">
+    <step li="2" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.ContextAction" method="FormatString" textToFind="Hello" buttons="next">
       <text>
         <Run FontSize="20">Apply QuickFix for an inspection</Run><LineBreak/><LineBreak/>
         The <Run FontFamily="Consolas">badlyNamedClass</Run> class doesn't match ReSharper's naming style! Let's fix this:<LineBreak/>

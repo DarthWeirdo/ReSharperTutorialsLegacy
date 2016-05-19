@@ -2,7 +2,9 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Platform.VisualStudio.SinceVs14.ProjectModel;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Feature.Services.Navigation;
 using JetBrains.ReSharper.Psi;
 using PlatformID = JetBrains.Application.platforms.PlatformID;
 
@@ -29,6 +31,14 @@ namespace pluginTestW04
         {
             if (typeElement == null) throw new ArgumentNullException("typeElement");
             return typeElement.GetMembers().OfType<IMethod>();
+        }
+    
+        [NotNull]
+        public static void NavigateToFirstMember([NotNull] this ITypeElement typeElement)
+        {
+            if (typeElement == null) throw new ArgumentNullException("typeElement");
+            var member = typeElement.GetMembers().FirstOrDefault();
+            member.Navigate(true);
         }
 
     }

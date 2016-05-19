@@ -40,13 +40,20 @@ namespace pluginTestW04
                 {
                     var li = Convert.ToInt32(reader.GetAttribute("li"));
                     var file = reader.GetAttribute("file");
-                    var treenode = reader.GetAttribute("treenode");
+                    var typeName = reader.GetAttribute("type");
+                    var methodName = reader.GetAttribute("method");
+                    var projectName = reader.GetAttribute("project");
+                    var textToFind = reader.GetAttribute("textToFind");
                     var buttons = reader.GetAttribute("buttons");
                     reader.ReadToFollowing("text");
                     var text = reader.ReadInnerXml();
                     text = Regex.Replace(text, @"\s+", " ");
 
-                    var step = new TutorialStep(li, text, file, treenode, buttons);
+                    if ((file == null) || (projectName == null))
+                    {
+                        throw new Exception("Tutorial content file is corrupted. Please reinstall the plugin.");
+                    }
+                    var step = new TutorialStep(li, text, file, projectName, typeName, methodName, textToFind, buttons);                    
                     result.Add(li, step);
                 }
             }
