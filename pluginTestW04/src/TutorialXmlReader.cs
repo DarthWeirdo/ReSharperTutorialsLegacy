@@ -13,17 +13,17 @@ namespace pluginTestW04
     public static class TutorialXmlReader
     {
 
-        public static string ReadCurrentStep(string path)
+        public static int ReadCurrentStep(string path)
         {
             using (var reader = XmlReader.Create(new StreamReader(path)))
             {
                 while (reader.ReadToFollowing("currentStep"))
                 {
-                    return reader.ReadElementContentAsString();                    
+                    return Convert.ToInt32(reader.ReadElementContentAsString());                    
                 }
             }
 
-            return "Missing tutorial content. Please reinstall the plugin!";
+            throw new Exception("Missing tutorial content.Please reinstall the plugin!");
         }
 
         public static void WriteCurrentStep(string path, string value)
@@ -74,6 +74,7 @@ namespace pluginTestW04
                     var methodName = reader.GetAttribute("method");
                     var projectName = reader.GetAttribute("project");
                     var textToFind = reader.GetAttribute("textToFind");
+                    var textToFindOccurrence = Convert.ToInt32(reader.GetAttribute("textToFindOccurrence"));
                     var buttons = reader.GetAttribute("buttons");
                     reader.ReadToFollowing("text");
                     var text = reader.ReadInnerXml();
@@ -83,7 +84,7 @@ namespace pluginTestW04
                     {
                         throw new Exception("Tutorial content file is corrupted. Please reinstall the plugin.");
                     }
-                    var step = new TutorialStep(li, text, file, projectName, typeName, methodName, textToFind, buttons);                    
+                    var step = new TutorialStep(li, text, file, projectName, typeName, methodName, textToFind, textToFindOccurrence, buttons);                    
                     result.Add(li, step);
                 }
             }

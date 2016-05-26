@@ -7,7 +7,7 @@
         xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="tutorialUI.TitleWindow"
         mc:Ignorable="d"
         
-        Title="TitleWindow" Height="350" Width="600" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
+        Title="TitleWindow" Height="350" Width="640" WindowStyle="None" AllowsTransparency="True" ResizeMode="CanResizeWithGrip"
         Background="Transparent" WindowStartupLocation="CenterOwner" 
         MouseDown="Window_MouseDown" 
 >
@@ -36,7 +36,7 @@
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="{x:Type Button}">
-                        <Border Background="{TemplateBinding Background}" BorderBrush="#A326146B" BorderThickness="2" CornerRadius="2">
+                        <Border Background="{TemplateBinding Background}" BorderBrush="#A326146B" BorderThickness="1" CornerRadius="2">
                             <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Border>
                     </ControlTemplate>

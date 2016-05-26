@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading.Tasks;
+using System.Windows;
 using System.Windows.Controls;
 using JetBrains.Application;
 using JetBrains.Application.DataContext;
@@ -16,11 +18,12 @@ namespace pluginTestW04
 {    
 
     public class Narrator
-    {
-        private readonly IDataContext _context; // probably we don't need context here as it is actual only on the moment of creation        
+    {        
         private readonly SourceCodeNavigator _codeNavigator;
         private readonly TutorialWindow _tutorialWindow;
         private readonly string _contentPath;
+        private readonly Button _btnNext;
+        private readonly Button _btnSaveClose;
 
         private Dictionary<int, TutorialStep> _steps;        
         private int _currentStepId;  
@@ -29,11 +32,10 @@ namespace pluginTestW04
         public TutorialStep CurrentStep => _steps[_currentStepId];
 
 
-        public Narrator(string contentPath, Lifetime lifetime, IDataContext context, ISolution solution, IPsiFiles psiFiles,
+        public Narrator(string contentPath, Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,
                                   TextControlManager textControlManager, IShellLocks shellLocks, IEditorManager editorManager, 
                                   DocumentManager documentManager, IUIApplication environment)
-        {
-            _context = context;
+        {            
             _contentPath = contentPath;            
             _codeNavigator = new SourceCodeNavigator(lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, 
                 documentManager, environment);
@@ -42,15 +44,17 @@ namespace pluginTestW04
             LoadTutorialContent(contentPath);
 
             // TODO: here must be some logic on checking current step (if a user've already proceeded to some step during previous sessions)     
-            _currentStepId = Convert.ToInt32(TutorialXmlReader.ReadCurrentStep(contentPath));              
+            _currentStepId = TutorialXmlReader.ReadCurrentStep(contentPath);              
 
             // TODO: Implement subscribing through the TutorialWindow.Subscribe()
-            var btnNext =  (Button) _tutorialWindow.FindName("BtnNext");
-            if (btnNext != null) btnNext.Click += delegate { GoNext(); };
+//            var btnNext =  (Button) _tutorialWindow.FindName("BtnNext");
+//            if (btnNext != null) btnNext.Click += delegate { GoNext(); };
+//
+//            var btnSaveClose = (Button)_tutorialWindow.FindName("BtnSaveClose");
+//            if (btnSaveClose != null) btnSaveClose.Click += delegate { SaveAndClose(); };
 
-            var btnSaveClose = (Button)_tutorialWindow.FindName("BtnSaveClose");
-            if (btnSaveClose != null) btnSaveClose.Click += delegate { SaveAndClose(); };           
-
+            _tutorialWindow.Subscribe(UiActionType.Next, GoNext);
+            _tutorialWindow.Subscribe(UiActionType.SaveClose, SaveAndClose);
 
             /*
             _textPresenter = (TextBlock) _tutorialWindow.FindName("TextContent");
@@ -69,6 +73,25 @@ namespace pluginTestW04
 
 
         }
+            
+        private void SaveAndClose(object sender, RoutedEventArgs args)
+        {            
+            TutorialXmlReader.WriteCurrentStep(_contentPath, _currentStepId.ToString());
+            _tutorialWindow.Unsubscribe();
+            CloseWindow();
+            
+            VsCommunication.SaveVsSolution();
+            VsCommunication.CloseVsSolution();
+        }
+
+        private void GoNext(object sender, RoutedEventArgs args)
+        {
+            if (_currentStepId >= _steps.Count) return;
+            _currentStepId++;
+            ProcessStep(CurrentStep);
+
+            // TODO: raise event that tutorial is over, buttons in _tutorialWindow must be subscribed to this event.            
+        }
 
 
         private void LoadTutorialContent(string contentPath)
@@ -83,16 +106,8 @@ namespace pluginTestW04
 
             ShowWindow();
             ProcessStep(CurrentStep);
-        }
+        }        
 
-        public void SaveAndClose()
-        {
-            // TODO: Implement saving current tutorial state
-            TutorialXmlReader.WriteCurrentStep(_contentPath, _currentStepId.ToString());
-            CloseWindow();
-            // TODO: close solution, unsubscribe
-
-        }
 
         private void ProcessStep(TutorialStep step)
         {
@@ -100,32 +115,28 @@ namespace pluginTestW04
             ShowStepText(step);
 
             _codeNavigator.Navigate(step);
-            
+//            _codeNavigator.NavigateOld(step);
+
         }
+
 
         private void ShowStepText(TutorialStep step)
         {
             _tutorialWindow.TutorialText = step.Text;
         }
-            
+          
+          
         public void ShowWindow()
         {
             _tutorialWindow.Show();
         }
 
+
         private void CloseWindow()
         {
             _tutorialWindow.Close();
-        }
+        }       
 
-        public void GoNext()
-        {
-            if (_currentStepId >= _steps.Count) return;
-            _currentStepId++;            
-            ProcessStep(CurrentStep);
-
-            // TODO: raise event that tutorial is over, buttons in _tutorialWindow must be subscribed to this event.            
-        }
 
         public void GoPrevious()
         {

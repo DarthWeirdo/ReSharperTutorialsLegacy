@@ -14,6 +14,9 @@ namespace pluginTestW04
         public string Tutorial1Path;
         public string Tutorial1ContentPath;
 
+        // TEMPORARY
+        public string Tutorial1CsPath;
+
         public GlobalOptions([NotNull]Lifetime lifetime)
         {        
             var commonTutorialPath = VsCommunication.GetTutorialsPath();
@@ -22,6 +25,8 @@ namespace pluginTestW04
 
             Tutorial1Path = commonTutorialPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
             Tutorial1ContentPath = commonTutorialPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";
+
+            Tutorial1CsPath = commonTutorialPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.csproj";
         }        
     }
 }

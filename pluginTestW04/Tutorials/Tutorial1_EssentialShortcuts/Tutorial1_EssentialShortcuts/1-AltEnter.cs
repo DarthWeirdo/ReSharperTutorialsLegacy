@@ -1,7 +1,11 @@
-﻿namespace Tutorial1_EssentialShortcuts
+﻿using System.Collections;
+using System.Runtime.InteropServices;
+using System.Text;
+
+namespace Tutorial1_EssentialShortcuts
 {
     public class badlyNamedClass
-    {
+    {     
     }
 
     public class ContextAction

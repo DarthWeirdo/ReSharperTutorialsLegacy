@@ -36,7 +36,7 @@ namespace pluginTestW04
             // TODO: Check result of the dialog
             titleWnd.ShowDialog();
             
-            VsCommunication.OpenVsSolution(context, globalOptions.Tutorial1Path);
+            VsCommunication.OpenVsSolution(globalOptions.Tutorial1Path);            
         }
     }
 }

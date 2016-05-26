@@ -1,36 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Windows.Documents;
-using JetBrains.Annotations;
 using JetBrains.Application;
-using JetBrains.Application.platforms;
 using JetBrains.DataFlow;
 using JetBrains.DocumentManagers;
-using JetBrains.DocumentModel;
 using JetBrains.IDE;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Feature.Services.Navigation;
-using JetBrains.ReSharper.Feature.Services.Navigation.Goto.ProvidersAPI;
-using JetBrains.ReSharper.Feature.Services.Navigation.NavigationProviders;
-using JetBrains.ReSharper.Features.Internal.PsiBrowser;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.Caches;
-using JetBrains.ReSharper.Psi.CSharp;
-using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
-using JetBrains.ReSharper.Psi.Impl;
-using JetBrains.ReSharper.Psi.Paths;
-using JetBrains.ReSharper.Psi.Resolve;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.TextControl;
-using JetBrains.TreeModels;
 using JetBrains.UI.Application;
-using JetBrains.UI.Avalon.TreeListView;
-using JetBrains.UI.PopupWindowManager;
-using JetBrains.UI.Resources;
-using JetBrains.Util;
 
 namespace pluginTestW04
 {
@@ -67,95 +45,41 @@ namespace pluginTestW04
               () => psiFiles.AfterPsiChanged -= psiChanged);                             
         }
 
-        /// <summary>
-        /// By default, navigates to type definition. if methodName is provided, navigates to a method declaration (first occurrence) 
-        /// within the specified class. If textToFind is provided, navigates to the first text occurrence after class or method declaration.       
-        /// </summary>
-        /// <param name="projectName"></param>
-        /// <param name="fileName"></param>
-        /// <param name="typeName">Required</param>
-        /// <param name="methodName"></param>
-        /// <param name="textToFind"></param>
-        public void Navigate([CanBeNull] string projectName, [NotNull] string fileName, [NotNull] string typeName, [CanBeNull] string methodName,
-            [CanBeNull] string textToFind)
-        {
-            var project = PsiNavigationHelper.GetOpenedProject(Solution);
 
-            if (projectName != null)
-            {
-                project = PsiNavigationHelper.GetProjectByName(Solution, projectName);
-            }
-
-            var file = PsiNavigationHelper.GetCSharpFile(project, fileName);
-
-            if (methodName != null)            
-                PsiNavigationHelper.NavigateToMethod(file, typeName, methodName);            
-            else            
-                PsiNavigationHelper.NavigateToType(file, typeName);
-
-            if (textToFind != null)
-            {
-                VsCommunication.FindTextInCurrentDocument(textToFind);
-            }            
-        }
+//        public void NavigateOld(TutorialStep step)
+//        {
+//            var project = PsiNavigationHelper.GetProjectByName(Solution, step.ProjectName);
+//
+//            var file = PsiNavigationHelper.GetCSharpFile(project, step.FileName);
+//
+//            if (step.MethodName != null)
+//                PsiNavigationHelper.NavigateToMethod(file, step.TypeName, step.MethodName, _shellLocks, _lifetime);
+//            else
+//                PsiNavigationHelper.NavigateToType(file, step.TypeName, _shellLocks, _lifetime);
+//            
+//            if (step.TextToFind != null)
+//                VsCommunication.FindTextInCurrentDocument(step.TextToFind, step.TextToFindOccurrence);            
+//        }
 
         public void Navigate(TutorialStep step)
         {
-            var project = PsiNavigationHelper.GetOpenedProject(Solution);
-
-            if (step.ProjectName != null)
-            {
-                project = PsiNavigationHelper.GetProjectByName(Solution, step.ProjectName);
-            }
+            var project = PsiNavigationHelper.GetProjectByName(Solution, step.ProjectName);
 
             var file = PsiNavigationHelper.GetCSharpFile(project, step.FileName);
+            
+            var node = PsiNavigationHelper.GetTreeNodeForStep(file, step.TypeName, step.MethodName, step.TextToFind, step.TextToFindOccurrence);
 
-            if (step.MethodName != null)
-                PsiNavigationHelper.NavigateToMethod(file, step.TypeName, step.MethodName);
-            else
-                PsiNavigationHelper.NavigateToType(file, step.TypeName);
-
-            if (step.TextToFind != null)
-            {
-                VsCommunication.FindTextInCurrentDocument(step.TextToFind);
-            }
+            NavigateToNode(node, true);                            
         }
-
-        // TODO: delete this
-        public void TestPsi()
-        {            
-            ICSharpFile csFile = null;
-            var projects = Solution.GetTopLevelProjects();
-
-            foreach (var project in projects)
-            {
-                if (project.Name == "Tutorial1_EssentialShortcuts")
-                {
-                    csFile = PsiNavigationHelper.GetCSharpFile(project, "1-AltEnter.cs");                    
-                }                
-            }
-
-            //            var node = GetTypeNodeByFullClrName(csFile, "Tutorial1_EssentialShortcuts.ContextAction");         
-            //            Navigate(node, true);
-
-//            NavigateToMethod(csFile, "Tutorial1_EssentialShortcuts.ContextAction", "FormatString");
-            PsiNavigationHelper.NavigateToType(csFile, "Tutorial1_EssentialShortcuts.ContextAction");
-            VsCommunication.FindTextInCurrentDocument("Hello");
-        }
-
-
-        /// <summary>
-        /// Navigate to any node. Not needed right now, though maybe needed in future.
-        /// </summary>
-        /// <param name="treeNode"></param>
-        /// <param name="activate"></param>
+    
+        
         private void NavigateToNode(ITreeNode treeNode, bool activate)
         {
             //            if (!IsUpToDate()) return;
             _shellLocks.ExecuteOrQueueReadLock(_lifetime, "Navigate", () =>
             {
                 var range = treeNode.GetDocumentRange();
-                if (!range.IsValid()) return;
+                if (!range.IsValid()) return;                
 
                 var projectFile = _documentManager.TryGetProjectFile(range.Document);
                 if (projectFile == null) return;
@@ -166,11 +90,13 @@ namespace pluginTestW04
                 textControl.Caret.MoveTo(
                     range.TextRange.StartOffset, CaretVisualPlacement.DontScrollIfVisible);
 
-//                if (range.TextRange.Length < 30) // select if small enough
+                if (range.TextRange.Length < 30) // select if small enough
                     textControl.Selection.SetRange(range.TextRange);
             });
         }
-        
+
+
+
         public bool IsUpToDate()
         {
             // PsiTimestamp is a time stamp for PsiFiles - use it to check the current PSI is up to date

@@ -15,16 +15,18 @@ namespace pluginTestW04
         public string TypeName { get; }
         public string MethodName { get; }
         public string TextToFind { get; }
+        public int TextToFindOccurrence { get; }
         public string Buttons { get; }
 
         public TutorialStep(int li, string text, string file, string projectName, string typeName, string methodName, 
-            string textToFind, string buttons)
+            string textToFind, int textToFindOccurrence, string buttons)
         {
             Id = li;
             _text = text;
             FileName = file;
             TypeName = typeName;
             Buttons = buttons;
+            TextToFindOccurrence = textToFindOccurrence;
             ProjectName = projectName;
             MethodName = methodName;
             TextToFind = textToFind;

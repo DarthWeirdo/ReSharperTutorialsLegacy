@@ -1,19 +1,23 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using JetBrains.Annotations;
+using JetBrains.Application;
 using JetBrains.Application.platforms;
+using JetBrains.DataFlow;
 using JetBrains.DocumentManagers;
-using JetBrains.Metadata.Utils;
 using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Feature.Services.Navigation;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
+using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Paths;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using PlatformID = JetBrains.Application.platforms.PlatformID;
 
 namespace pluginTestW04
 {
@@ -107,13 +111,9 @@ namespace pluginTestW04
             return declaration?.DeclaredElement;
         }
 
-        /// <summary>
-        /// Navigate to a method
-        /// </summary>
-        /// <param name="file"></param>
-        /// <param name="typeName">Type FQN</param>
-        /// <param name="methodName">Method short name</param>
-        public static void NavigateToMethod(ICSharpFile file, string typeName, string methodName)
+        #region High-level R# navigation (not used)
+
+        public static void NavigateToMethod(ICSharpFile file, string typeName, string methodName, IShellLocks shellLocks, Lifetime lifetime)
         {
             var treeNodeList = file.EnumerateTo(file.LastChild);            
 
@@ -127,10 +127,14 @@ namespace pluginTestW04
             if (methods == null) return;
 
             var targetMethod = methods.FirstOrDefault(method => method.ShortName == methodName);            
-            targetMethod.Navigate(true);
-        }
 
-        public static void NavigateToType(ICSharpFile file, string typeName)
+            shellLocks.ReentrancyGuard.ExecuteOrQueue("Navigate", () =>
+            {
+                targetMethod.Navigate(true);                
+            });            
+        }        
+
+        public static void NavigateToType(ICSharpFile file, string typeName, IShellLocks shellLocks, Lifetime lifetime)
         {
             var treeNodeList = file.EnumerateTo(file.LastChild);
 
@@ -140,10 +144,35 @@ namespace pluginTestW04
                 where typeElement != null                           
                 where typeElement.GetFullClrName() == typeName
                 select typeElement).FirstOrDefault();
-            
-            targetType.Navigate(true);
+
+           shellLocks.ReentrancyGuard.ExecuteOrQueue("Navigate", () =>
+           {
+               targetType.Navigate(true);
+           });
         }
 
+        public static void NavigateToText(ICSharpFile file, string typeName, string methodName, string text, int textOcc, IShellLocks shellLocks, Lifetime lifetime)
+        {
+            var treeNodeList = file.EnumerateTo(file.LastChild);
+
+            var methods = (from treeNode in treeNodeList
+                           let element = GetDeclaredElement(treeNode)
+                           let typeElement = element as ITypeElement
+                           where typeElement != null
+                           where typeElement.GetFullClrName() == typeName
+                           select typeElement.GetAllMethods()).FirstOrDefault();
+
+            if (methods == null) return;
+
+            var targetMethod = methods.FirstOrDefault(method => method.ShortName == methodName);
+
+            shellLocks.ReentrancyGuard.ExecuteOrQueue("Navigate", () => { targetMethod.Navigate(true);});
+            shellLocks.ReentrancyGuard.ExecuteOrQueue("FindText", () =>
+            {
+                VsCommunication.FindTextInCurrentDocument(text, textOcc);
+            });            
+        }
+        #endregion
 
         [CanBeNull]
         public static ITreeNode GetTypeNodeByFullClrName(ICSharpFile file, string name)
@@ -157,6 +186,76 @@ namespace pluginTestW04
                 where typeElement.GetFullClrName() == name
                 select treeNode).FirstOrDefault();
         }
+
+
+
+        [CanBeNull]
+        public static ITreeNode GetMethodNodeByFullClrName(ICSharpFile file, string typeName, string methodName)
+        {
+            var typeNode = GetTypeNodeByFullClrName(file, typeName);
+            if (typeNode == null) return null;
+
+            var treeNodeList = typeNode.EnumerateTo(typeNode.NextSibling);
+
+            return (from treeNode in treeNodeList
+                    where treeNode is IMethodDeclaration
+                    let method = (IMethodDeclaration)treeNode
+                    where method.DeclaredName == methodName
+                    select treeNode).FirstOrDefault();
+        }
+
+
+        [CanBeNull]
+        public static ITreeNode GetTreeNodeForStep(ICSharpFile file, string typeName, string methodName, string text, int textOccurrence)
+        {
+            IEnumerable<ITreeNode> treeNodeList;
+            string navText;
+            var occIndex = 0;   // TODO: provide occurence # for methods as well (for overloads)
+
+            if (text != null)
+            {
+                navText = text;
+                if (textOccurrence > 0) occIndex = textOccurrence - 1;
+            }
+            else if (methodName != null)
+            {
+                navText = methodName;
+                occIndex = 0;
+            }
+            else            
+                navText = GetShortNameFromFqn(typeName);
+                            
+            if (typeName == null && methodName == null)
+                treeNodeList = file.EnumerateTo(file.LastChild);
+            else if (typeName != null && methodName != null)
+            {
+                var node = GetMethodNodeByFullClrName(file, typeName, methodName);
+                if (node == null) return null;
+                treeNodeList = node.EnumerateTo(node.NextSibling);
+            }
+            else if (typeName != null)
+            {
+                var node = GetTypeNodeByFullClrName(file, typeName);
+                if (node == null) return null;
+                treeNodeList = node.EnumerateTo(node.NextSibling);
+            }
+            else
+                return null;                
+
+            var result = from treeNode in treeNodeList
+                         where treeNode.GetText() == navText
+                         select treeNode;
+
+            return result.AsArray()[occIndex];           
+        }
+
+
+        private static string GetShortNameFromFqn(string fqn)
+        {
+            var pos = fqn.LastIndexOf(".", StringComparison.Ordinal) + 1;
+            return pos > 0 ? fqn.Substring(pos) : fqn;
+        }
+
 
     }
 }

@@ -16,6 +16,9 @@ namespace tutorialUI
     public partial class TutorialWindow
     {
 
+        private RoutedEventHandler _btnNextEventHandler;
+        private RoutedEventHandler _btnSaveCloseEventHandler;
+
         private const int WS_EX_NOACTIVATE = 0x08000000;
         private const int GWL_EXSTYLE = -20;
 
@@ -34,10 +37,14 @@ namespace tutorialUI
             Owner = Application.Current.MainWindow;
             Width = Owner.Width / 3;
             Height = Owner.Height / 4;
-            Left = Owner.Left + (Owner.Width - ActualWidth) - 30;
-            Top = Owner.Top + (Owner.Height - ActualHeight) - 30;
+//            WindowStartupLocation = WindowStartupLocation.CenterOwner;
+            Left = Owner.Left + (Owner.Width - Width) - 30;
+            Top = Owner.Top + (Owner.Height - Height) - 30;
 
-            Focusable = false;
+//            Left = 0;
+//            Top = 0;
+
+            //Focusable = false;
 
             SourceInitialized += (s, e) =>
             {
@@ -50,16 +57,27 @@ namespace tutorialUI
         /// <summary>
         /// Subscribe event handlers for WPF controls
         /// </summary>        
-        /// <param name="actionType"></param>
-        /// <param name="controlEvent"></param>
+        /// <param name="actionType"></param>        
         /// <param name="eventHandler"></param>
-        public void Subscribe(UiActionType actionType , RoutedEventHandler controlEvent, Action eventHandler)
+        public void Subscribe(UiActionType actionType, Action<object, RoutedEventArgs> eventHandler)
         {
-            throw new NotImplementedException();
+            switch (actionType)
+            {
+                case UiActionType.SaveClose:
+                    _btnSaveCloseEventHandler = (o, ea) => eventHandler(o, ea);
+                    BtnSaveClose.Click += _btnSaveCloseEventHandler;
+                    break;
+                case UiActionType.Next:
+                    _btnNextEventHandler = (o, ea) => eventHandler(o, ea);
+                    BtnNext.Click += _btnNextEventHandler;
+                    break;                
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(actionType), actionType, null);
+            }
         }
 
-
         #region Unimplemented DepProp
+
         //        // TODO: this is too complicated. We can and probably should get rid of DependencyProperty and use simple Property
         //        /// <summary>
         //        /// It's my attempt to implement dependency property to make autoupdate of text in TutorialWindow
@@ -79,8 +97,8 @@ namespace tutorialUI
         //            {
         //                InlineXamlText.SetFormattedText(TextContent, Text);
         //            });
-        #endregion
 
+        #endregion
 
         public string TutorialText
         {
@@ -88,15 +106,21 @@ namespace tutorialUI
             set
             {
                 _tutorialText = value;
-                InlineXamlText.SetFormattedText(TextContent, value);                
+                InlineXamlText.SetFormattedText(TextContent, value);
             }
         }
-        
+
 
         private void Window_MouseDown(object sender, MouseButtonEventArgs e)
         {
             if (e.ChangedButton == MouseButton.Left)
                 DragMove();
+        }
+
+        public void Unsubscribe()
+        {
+            BtnNext.Click -= _btnNextEventHandler;
+            BtnSaveClose.Click -= _btnSaveCloseEventHandler;
         }
     }
 }

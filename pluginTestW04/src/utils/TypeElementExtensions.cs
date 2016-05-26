@@ -32,7 +32,8 @@ namespace pluginTestW04
             if (typeElement == null) throw new ArgumentNullException("typeElement");
             return typeElement.GetMembers().OfType<IMethod>();
         }
-    
+       
+
         [NotNull]
         public static void NavigateToFirstMember([NotNull] this ITypeElement typeElement)
         {
