@@ -128,7 +128,7 @@
                     <BlockUIContainer Padding="0 0 0 0">
                         <TextBlock x:Name="TextContent" Margin="0 0 0 0" TextWrapping="WrapWithOverflow"
                                    HorizontalAlignment="Stretch" VerticalAlignment="Stretch" FontFamily="Segoe UI">
-                            No more text for you!!! 
+                            Loading... 
                         </TextBlock>
                     </BlockUIContainer>
                 </FlowDocument>
@@ -136,13 +136,16 @@
 
             <Line Grid.Row="0" Style="{StaticResource HorizontalLineStyle}" />
 
-            
+            <Button x:Name="BtnRestart" Style="{StaticResource StyleCancelButton}" IsCancel="False" Visibility="Hidden" Grid.Row="1" Margin="10 10 220 10" Width="120" Click="BtnRestart_Click" >
+                Restart Tutorial
+            </Button>
+
 
             <Button x:Name="BtnStart" Style="{StaticResource StyleDefaultButton}" Grid.Row="1" Margin="10 10 90 10" Width="120" Click="BtnStart_Click" >
                 Start Tutorial
             </Button>
 
-            <Button x:Name="BtnClose" Style="{StaticResource StyleCancelButton}" Grid.Row="1" Margin="10 10 10 10">
+            <Button x:Name="BtnClose" Style="{StaticResource StyleCancelButton}" Grid.Row="1" Margin="10 10 10 10" Click="BtnClose_Click">
                 Cancel
             </Button>
         </Grid>

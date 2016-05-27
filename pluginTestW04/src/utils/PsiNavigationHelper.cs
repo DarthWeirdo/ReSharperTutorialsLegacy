@@ -16,6 +16,7 @@ using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Paths;
 using JetBrains.ReSharper.Psi.Tree;
+using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Util;
 using PlatformID = JetBrains.Application.platforms.PlatformID;
 
@@ -86,9 +87,9 @@ namespace pluginTestW04
 
         [CanBeNull]
         public static ICSharpFile GetCSharpFile(IProject project, string filename)
-        {
-            IPsiSourceFile file = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename));
-            return file.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault();
+        {            
+                IPsiSourceFile file = project.GetPsiSourceFileInProject(FileSystemPath.Parse(filename));
+                return file.GetPsiFiles<CSharpLanguage>().SafeOfType<ICSharpFile>().SingleOrDefault();        
         }
 
         [CanBeNull]

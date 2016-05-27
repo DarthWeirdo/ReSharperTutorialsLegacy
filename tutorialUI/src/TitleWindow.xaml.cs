@@ -11,15 +11,21 @@ namespace tutorialUI
     {
         private string _introText;
 
-        public TitleWindow(string introText)
+        public bool Restart { get; private set; }
+
+
+        public TitleWindow(string introText, bool firstTime)
         {
             InitializeComponent();
 
             Owner = Application.Current.MainWindow;
             WindowStartupLocation = WindowStartupLocation.CenterOwner;
-        
-//            Left = Owner.Left + (Owner.Width / 2 - ActualWidth / 2);
-//            Top = Owner.Top + (Owner.Height / 2 - ActualHeight / 2);
+
+            if (!firstTime)
+            {
+                BtnStart.Content = "Continue Tutorial";
+                BtnRestart.Visibility = Visibility.Visible;
+            }     
 
             IntroText = introText;                        
 
@@ -44,10 +50,17 @@ namespace tutorialUI
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
-            Close();
-            // TODO: Implement ShowDialog logic for Cancel as well
+            DialogResult = true;            
         }
 
+        private void BtnClose_Click(object sender, RoutedEventArgs e)
+        {
+            DialogResult = false;
+        }
 
+        private void BtnRestart_Click(object sender, RoutedEventArgs e)
+        {
+            Restart = true;
+        }
     }
 }

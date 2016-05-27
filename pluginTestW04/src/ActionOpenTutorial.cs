@@ -31,12 +31,20 @@ namespace pluginTestW04
         {
             var globalOptions = context.GetComponent<GlobalOptions>();            
             var titleString = TutorialXmlReader.ReadIntro(globalOptions.Tutorial1ContentPath);
-            var titleWnd = new TitleWindow(titleString);
+            var step = TutorialXmlReader.ReadCurrentStep(globalOptions.Tutorial1ContentPath);
+            var firstTime = step == 1;        
 
-            // TODO: Check result of the dialog
-            titleWnd.ShowDialog();
-            
-            VsCommunication.OpenVsSolution(globalOptions.Tutorial1Path);            
+            var titleWnd = new TitleWindow(titleString, firstTime);
+
+            if (titleWnd.Restart)
+            {
+                
+            }
+            else
+            {
+                if (titleWnd.ShowDialog() == true)
+                    VsCommunication.OpenVsSolution(globalOptions.Tutorial1Path);
+            }            
         }
     }
 }

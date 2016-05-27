@@ -5,6 +5,7 @@ using JetBrains.DataFlow;
 using JetBrains.DocumentManagers;
 using JetBrains.IDE;
 using JetBrains.ProjectModel;
+using JetBrains.ReSharper.Intentions.Bulbs;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
@@ -43,7 +44,7 @@ namespace pluginTestW04
         private void RunTutorial(string contentPath, Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,                                 
                                   TextControlManager textControlManager, IShellLocks shellLocks,
                                   IEditorManager editorManager, DocumentManager documentManager, IUIApplication environment)
-        {
+        {            
             _narrator = new Narrator(contentPath, lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager,                             documentManager, environment);
             _narrator.Start();
         }   

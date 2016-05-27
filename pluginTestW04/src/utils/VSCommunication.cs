@@ -34,6 +34,18 @@ namespace pluginTestW04
             selection?.MoveToPoint(selection.BottomPoint);
         }
 
+        public static void SetActiveDocument(string doc)
+        {
+            var vsInstance = GetCurrentVsInstance();
+            
+            foreach (Document document in vsInstance.Documents)
+            {
+                if (document.Name != doc) continue;
+                document.Activate();
+                return;
+            }            
+        }
+
 
         public static string GetTutorialsPath()
         {
@@ -53,7 +65,7 @@ namespace pluginTestW04
         {                       
             var vsInstance = GetCurrentVsInstance();
 
-            vsInstance.ExecuteCommand("File.OpenProject", path);
+            vsInstance.ExecuteCommand("File.OpenProject", path);            
         }
 
         public static void SaveVsSolution()

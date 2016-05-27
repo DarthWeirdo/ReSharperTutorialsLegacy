@@ -35,14 +35,14 @@ namespace pluginTestW04
             _shellLocks = shellLocks;
             _documentManager = documentManager;
             _environment = environment;
-            _editorManager = editorManager;
+            _editorManager = editorManager;            
 
             Action<ITreeNode, PsiChangedElementType> psiChanged =
                 (_, __) => OnPsiChanged();
 
             _lifetime.AddBracket(
               () => psiFiles.AfterPsiChanged += psiChanged,
-              () => psiFiles.AfterPsiChanged -= psiChanged);                             
+              () => psiFiles.AfterPsiChanged -= psiChanged);                                                                
         }
 
 
@@ -63,21 +63,25 @@ namespace pluginTestW04
 
         public void Navigate(TutorialStep step)
         {
-            var project = PsiNavigationHelper.GetProjectByName(Solution, step.ProjectName);
+            _shellLocks.ExecuteOrQueueReadLock(_lifetime, "Navigate", () =>
+            {
+                var project = PsiNavigationHelper.GetProjectByName(Solution, step.ProjectName);
 
-            var file = PsiNavigationHelper.GetCSharpFile(project, step.FileName);
-            
-            var node = PsiNavigationHelper.GetTreeNodeForStep(file, step.TypeName, step.MethodName, step.TextToFind, step.TextToFindOccurrence);
+                var file = PsiNavigationHelper.GetCSharpFile(project, step.FileName);
 
-            NavigateToNode(node, true);                            
+                var node = PsiNavigationHelper.GetTreeNodeForStep(file, step.TypeName, step.MethodName, step.TextToFind,
+                    step.TextToFindOccurrence);
+
+                NavigateToNode(node, true);
+            });
         }
     
         
         private void NavigateToNode(ITreeNode treeNode, bool activate)
         {
             //            if (!IsUpToDate()) return;
-            _shellLocks.ExecuteOrQueueReadLock(_lifetime, "Navigate", () =>
-            {
+//            _shellLocks.ExecuteOrQueueReadLock(_lifetime, "Navigate", () =>
+//            {
                 var range = treeNode.GetDocumentRange();
                 if (!range.IsValid()) return;                
 
@@ -90,9 +94,9 @@ namespace pluginTestW04
                 textControl.Caret.MoveTo(
                     range.TextRange.StartOffset, CaretVisualPlacement.DontScrollIfVisible);
 
-                if (range.TextRange.Length < 30) // select if small enough
+//                if (range.TextRange.Length < 30) // select if small enough
                     textControl.Selection.SetRange(range.TextRange);
-            });
+//            });
         }
 
 

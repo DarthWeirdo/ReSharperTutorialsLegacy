@@ -102,9 +102,16 @@ namespace pluginTestW04
 
         public void Start()
         {
-            // TODO: Implement restoring previous tutorial state
-
+            // TODO: Implement restoring previous tutorial state            
             ShowWindow();
+
+            // False Navigate
+            // For some reason, after a user opens the tutorial solution for the first time (right after installation),
+            // there are no opened files in it (just a blank screen). The second navigate opens the file automatically.
+            // The first one for some reason does NOT. That's why we add a false navigate operation which navigates
+            // to the file from the first step before the tutorial starts.
+            _codeNavigator.Navigate(_steps[1]);
+
             ProcessStep(CurrentStep);
         }        
 
