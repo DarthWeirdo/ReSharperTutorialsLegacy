@@ -50,6 +50,7 @@ namespace tutorialUI
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
+            Restart = false;
             DialogResult = true;            
         }
 
@@ -61,6 +62,7 @@ namespace tutorialUI
         private void BtnRestart_Click(object sender, RoutedEventArgs e)
         {
             Restart = true;
+            DialogResult = true;
         }
     }
 }

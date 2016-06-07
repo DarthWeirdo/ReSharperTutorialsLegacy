@@ -54,7 +54,7 @@ namespace pluginTestW04
                 {
                     return reader.ReadInnerXml();
                 }
-            }
+            }            
 
             return "Missing tutorial content. Please reinstall the plugin!";            
         }
@@ -75,7 +75,7 @@ namespace pluginTestW04
                     var projectName = reader.GetAttribute("project");
                     var textToFind = reader.GetAttribute("textToFind");
                     var textToFindOccurrence = Convert.ToInt32(reader.GetAttribute("textToFindOccurrence"));
-                    var buttons = reader.GetAttribute("buttons");
+                    var action = reader.GetAttribute("action");
                     reader.ReadToFollowing("text");
                     var text = reader.ReadInnerXml();
                     text = Regex.Replace(text, @"\s+", " ");
@@ -84,7 +84,7 @@ namespace pluginTestW04
                     {
                         throw new Exception("Tutorial content file is corrupted. Please reinstall the plugin.");
                     }
-                    var step = new TutorialStep(li, text, file, projectName, typeName, methodName, textToFind, textToFindOccurrence, buttons);                    
+                    var step = new TutorialStep(li, text, file, projectName, typeName, methodName, textToFind, textToFindOccurrence, action);                    
                     result.Add(li, step);
                 }
             }

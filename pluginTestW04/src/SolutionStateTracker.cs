@@ -4,6 +4,7 @@ using JetBrains.Application;
 using JetBrains.DataFlow;
 using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Tasks;
+using JetBrains.ReSharper.Psi;
 
 namespace pluginTestW04
 {
@@ -15,6 +16,7 @@ namespace pluginTestW04
         ISignal<ISolution> AfterSolutionContainerCreated { get; }
         ISignal<ISolution> AfterSolutionOpened { get; }
         ISignal<ISolution> BeforeSolutionClosed { get; }
+        ISignal<ISolution> AfterPsiLoaded { get; } 
     }
 
     [ShellComponent]
@@ -25,12 +27,14 @@ namespace pluginTestW04
             AfterSolutionContainerCreated = new Signal<ISolution>(lifetime, "SolutionStateTracker.AfterSolutionContainerCreated");
             AfterSolutionOpened = new Signal<ISolution>(lifetime, "SolutionStateTracker.AfterSolutionOpened");
             BeforeSolutionClosed = new Signal<ISolution>(lifetime, "SolutionStateTracker.BeforeSolutionClosed");
+            AfterPsiLoaded = new Signal<ISolution>(lifetime, "SolutionStateTracker.AfterPsiLoaded");
         }
 
         public ISolution Solution { get; private set; }
         public ISignal<ISolution> AfterSolutionContainerCreated { get; private set; }
         public ISignal<ISolution> AfterSolutionOpened { get; private set; }
         public ISignal<ISolution> BeforeSolutionClosed { get; private set; }
+        public ISignal<ISolution> AfterPsiLoaded { get; private set; } 
 
         private void HandleSolutionContainerCreated(ISolution solution)
         {
@@ -41,6 +45,12 @@ namespace pluginTestW04
         {
             Solution = solution;
             AfterSolutionOpened.Fire(solution);            
+        }
+
+        private void HandlePsiLoaded(ISolution solution)
+        {
+            Solution = solution;
+            AfterPsiLoaded.Fire(solution);
         }
 
         private void HandleSolutionClosed()
@@ -59,7 +69,8 @@ namespace pluginTestW04
             public SolutionStateNotifier([NotNull] Lifetime lifetime,
                                          [NotNull] ISolution solution,
                                          [NotNull] ISolutionLoadTasksScheduler scheduler,
-                                         [NotNull] SolutionStateTracker solutionStateTracker)
+                                         [NotNull] SolutionStateTracker solutionStateTracker,
+                                         [NotNull] IPsiServices psiServices)
             {
                 if (lifetime == null)
                     throw new ArgumentNullException("lifetime");
@@ -74,6 +85,9 @@ namespace pluginTestW04
                     SolutionLoadTaskKinds.SolutionContainer, () => solutionStateTracker.HandleSolutionContainerCreated(solution)));
                 scheduler.EnqueueTask(new SolutionLoadTask("SolutionStateTracker",
                     SolutionLoadTaskKinds.Done, () => solutionStateTracker.HandleSolutionOpened(solution)));
+                scheduler.EnqueueTask(new SolutionLoadTask("SolutionStateTracker",
+                    SolutionLoadTaskKinds.AfterDone, () => psiServices.CachesState.IsIdle.WhenTrueOnce(lifetime, () => 
+                    solutionStateTracker.HandlePsiLoaded(solution))));
                 lifetime.AddAction(solutionStateTracker.HandleSolutionClosed);
             }
         }

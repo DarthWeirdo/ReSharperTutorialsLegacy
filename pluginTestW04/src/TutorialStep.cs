@@ -1,13 +1,19 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
+using System.Windows;
 using JetBrains.Annotations;
 
 namespace pluginTestW04
 {
+    public delegate void StepIsDoneHandler(object sender, EventArgs e);
+
     public class TutorialStep : INotifyPropertyChanged
     {        
         // TODO: some event? or property subscribed to event that indicates the step is completed.        
 
-        private string _text;                
+        private string _text;
+        private bool _isDone;
+//        private readonly StepActionCheckerEventStyle _stepActionChecker;
 
         public int Id { get; }
         public string ProjectName { get;}
@@ -16,21 +22,79 @@ namespace pluginTestW04
         public string MethodName { get; }
         public string TextToFind { get; }
         public int TextToFindOccurrence { get; }
-        public string Buttons { get; }
+        public string Action { get; }
+        
+        // TODO: this is the check that must be run after the Action is performed (if it exists).
+        // TODO: all checks can be placed in a separate static class
+        public Func<bool> Check;
+        private bool _isActionDone = false;
+        public event StepIsDoneHandler StepIsDone;
+
+
+        public bool IsActionDone
+        {
+            get { return _isActionDone; }
+            set
+            {
+                if (value == _isActionDone) return;                
+                _isActionDone = value;
+
+                if (Check == null)
+                {
+                    OnStepIsDone();
+                }
+            }
+        }
+
+        public bool IsCheckDone { get; set; } = false;
+
+        public bool IsDone
+        {
+            get { return _isDone; }
+            set
+            {
+                if (value == _isDone)
+                    return;
+
+                _isDone = value;
+                OnPropertyChanged("IsDone");
+            }
+        }
 
         public TutorialStep(int li, string text, string file, string projectName, string typeName, string methodName, 
-            string textToFind, int textToFindOccurrence, string buttons)
+            string textToFind, int textToFindOccurrence, string action)
         {
             Id = li;
             _text = text;
             FileName = file;
             TypeName = typeName;
-            Buttons = buttons;
+            Action = action;
             TextToFindOccurrence = textToFindOccurrence;
             ProjectName = projectName;
             MethodName = methodName;
             TextToFind = textToFind;
-        }        
+            _isDone = false;
+
+            // trying to implement logic checks right inside step class
+//            if (action != null)
+//            {
+//                _stepActionChecker = new StepActionCheckerEventStyle(action);
+//                _stepActionChecker.ActionApplied += StepActionCheckerOnActionApplied;
+//            }                                    
+        }
+
+//        public void Unsubscribe()
+//        {
+//            if (Action != null)            
+//                _stepActionChecker.ActionApplied -= StepActionCheckerOnActionApplied;                        
+//        }
+//
+//        private void StepActionCheckerOnActionApplied(object sender, EventArgs eventArgs)
+//        {
+//            IsActionDone = true;
+//            MessageBox.Show(Action, " DONE!!!");
+//        }
+
 
         public string Text
         {
@@ -54,18 +118,9 @@ namespace pluginTestW04
         }
         
 
-        public void CheckStepIsDone()
+        protected virtual void OnStepIsDone()
         {
-            // TODO: Here we must check Solution Tree to check whether a user performed the 
-            // TODO: required step. We can check it explicitly or it could be some Analyzer that accepts our condition:
-            /*
-                Code is changed (possible solution: ITreeNode)
-		        Shortcut is applied (watch for Action?)
-		        Tool window is opened / closed (watch for Action?)
-		        Button in a tool window is clicked
-		        Menu item is selected
-                Context menu item is selected
-            */
+            StepIsDone?.Invoke(this, EventArgs.Empty);
         }
     }
 }

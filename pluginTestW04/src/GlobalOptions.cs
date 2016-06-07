@@ -6,27 +6,72 @@ using JetBrains.DataFlow;
 
 namespace pluginTestW04
 {
-    public enum TutorialId { None, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Tutorial5 }       
+    public enum TutorialId { None, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Tutorial5 }
+
+    public enum PathType
+    {
+        BaseSolutionFolder, BaseContentFolder, BaseSolutionFile, BaseContentFile, WorkCopySolutionFolder, 
+        WorkCopyContentFolder, WorkCopySolutionFile, WorkCopyContentFile
+    }
     
     [ShellComponent]
     public class GlobalOptions
-    {        
-        public string Tutorial1Path;
-        public string Tutorial1ContentPath;
-
-        // TEMPORARY
-        public string Tutorial1CsPath;
+    {                
+        private readonly string _commonTutorialPath;
+        private readonly string _commonWorkCopyPath;
 
         public GlobalOptions([NotNull]Lifetime lifetime)
         {        
-            var commonTutorialPath = VsCommunication.GetTutorialsPath();
-            if (commonTutorialPath == null)
+            _commonTutorialPath = SolutionCopyHelper.GetTutorialsPath();
+            _commonWorkCopyPath = SolutionCopyHelper.GetWorkingCopyPath();
+
+            if (_commonTutorialPath == null || _commonWorkCopyPath == null)
                 throw new DirectoryNotFoundException("Unable to find the folder with sample solutions. Please reinstall the plugin");
 
-            Tutorial1Path = commonTutorialPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
-            Tutorial1ContentPath = commonTutorialPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";
+        }
 
-            Tutorial1CsPath = commonTutorialPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.csproj";
-        }        
+        public string GetPath(TutorialId tutorialId, PathType pathType)
+        {
+            switch (tutorialId)
+            {
+                case TutorialId.None:
+                    break;
+
+                case TutorialId.Tutorial1:
+                    switch (pathType)
+                    {
+                        case PathType.BaseSolutionFolder:
+                            return _commonTutorialPath + "\\Tutorial1_EssentialShortcuts";
+                        case PathType.BaseContentFolder:
+                            return _commonTutorialPath + "\\Content\\Tutorial1";                            
+                        case PathType.BaseSolutionFile:
+                            return _commonTutorialPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
+                        case PathType.BaseContentFile:
+                            return _commonTutorialPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";
+                        case PathType.WorkCopySolutionFolder:
+                            return _commonWorkCopyPath + "\\Tutorial1_EssentialShortcuts";
+                        case PathType.WorkCopyContentFolder:
+                            return _commonWorkCopyPath + "\\Content\\Tutorial1";
+                        case PathType.WorkCopySolutionFile:
+                            return _commonWorkCopyPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
+                        case PathType.WorkCopyContentFile:
+                            return _commonWorkCopyPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";
+                        default:
+                            throw new ArgumentOutOfRangeException(nameof(pathType), pathType, null);
+                    }                    
+
+                case TutorialId.Tutorial2:
+                    break;
+                case TutorialId.Tutorial3:
+                    break;
+                case TutorialId.Tutorial4:
+                    break;
+                case TutorialId.Tutorial5:
+                    break;
+                default:
+                    throw new ArgumentOutOfRangeException(nameof(tutorialId), tutorialId, null);
+            }
+            return null;
+        }
     }
 }

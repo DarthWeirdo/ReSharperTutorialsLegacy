@@ -80,8 +80,6 @@ namespace pluginTestW04
         private void NavigateToNode(ITreeNode treeNode, bool activate)
         {
             //            if (!IsUpToDate()) return;
-//            _shellLocks.ExecuteOrQueueReadLock(_lifetime, "Navigate", () =>
-//            {
                 var range = treeNode.GetDocumentRange();
                 if (!range.IsValid()) return;                
 
@@ -94,9 +92,7 @@ namespace pluginTestW04
                 textControl.Caret.MoveTo(
                     range.TextRange.StartOffset, CaretVisualPlacement.DontScrollIfVisible);
 
-//                if (range.TextRange.Length < 30) // select if small enough
-                    textControl.Selection.SetRange(range.TextRange);
-//            });
+                textControl.Selection.SetRange(range.TextRange);
         }
 
 

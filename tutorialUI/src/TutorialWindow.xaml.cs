@@ -38,13 +38,13 @@ namespace tutorialUI
             Width = Owner.Width / 3;
             Height = Owner.Height / 4;
 //            WindowStartupLocation = WindowStartupLocation.CenterOwner;
-            Left = Owner.Left + (Owner.Width - Width) - 30;
-            Top = Owner.Top + (Owner.Height - Height) - 30;
+            Left = Owner.Left + (Owner.Width - Width) - 100;
+            Top = Owner.Top + (Owner.Height - Height) - 100;
 
 //            Left = 0;
 //            Top = 0;
 
-            //Focusable = false;
+            Focusable = false;
 
             SourceInitialized += (s, e) =>
             {
@@ -121,6 +121,11 @@ namespace tutorialUI
         {
             BtnNext.Click -= _btnNextEventHandler;
             BtnSaveClose.Click -= _btnSaveCloseEventHandler;
+        }
+
+        public void HideNextButton()
+        {
+            BtnNext.Visibility = Visibility.Hidden;
         }
     }
 }

@@ -15,7 +15,7 @@
                   <xs:attribute name="li" type="xs:string" />
                   <xs:attribute name="file" type="xs:string" />
                   <xs:attribute name="treenode" type="xs:string" />
-                  <xs:attribute name="buttons" type="xs:string" />
+                  <xs:attribute name="Action" type="xs:string" />
                 </xs:complexType>
               </xs:element>
             </xs:sequence>

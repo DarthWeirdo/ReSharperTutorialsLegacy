@@ -180,12 +180,26 @@ namespace pluginTestW04
         {
             var treeNodeList = file.EnumerateTo(file.LastChild);
 
-            return (from treeNode in treeNodeList
-                let element = GetDeclaredElement(treeNode)
-                let typeElement = element as ITypeElement
-                where typeElement != null
-                where typeElement.GetFullClrName() == name
-                select treeNode).FirstOrDefault();
+            List<ITreeNode> resultList = new List<ITreeNode>();
+
+            foreach (var node in treeNodeList)
+            {
+                var element = GetDeclaredElement(node);
+                var typeElement = element as ITypeElement;
+                if (typeElement != null && typeElement.GetFullClrName() == name)
+                {   
+                    resultList.Add(node);
+                }                
+            }
+
+            return resultList.FirstOrDefault();
+
+//            return (from treeNode in treeNodeList
+//                let element = GetDeclaredElement(treeNode)
+//                let typeElement = element as ITypeElement
+//                where typeElement != null
+//                where typeElement.GetFullClrName() == name
+//                select treeNode).FirstOrDefault();
         }
 
 

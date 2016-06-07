@@ -130,7 +130,7 @@
 <!--                                    <Setter Property="FontFamily" Value="Consolas"/>-->
 <!--                                </Style>-->
 <!--                            </TextBlock.Resources>-->
-                            No more text for you!!!
+                            Loading...    
                         </TextBlock>
                     </BlockUIContainer>
                 </FlowDocument>

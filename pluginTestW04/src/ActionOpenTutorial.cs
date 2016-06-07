@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
@@ -20,7 +21,31 @@ namespace pluginTestW04
             OpenTutorial(context, nextExecute);
         }
 
-        protected abstract void OpenTutorial(IDataContext context, DelegateExecute nextExecute);        
+        protected abstract void OpenTutorial(IDataContext context, DelegateExecute nextExecute);
+
+        public void OpenOrRestart(IDataContext context, TutorialId id)
+        {
+            var globalOptions = context.GetComponent<GlobalOptions>();
+            var titleString = TutorialXmlReader.ReadIntro(globalOptions.GetPath(id, PathType.WorkCopyContentFile));
+            var step = TutorialXmlReader.ReadCurrentStep(globalOptions.GetPath(id, PathType.WorkCopyContentFile));
+            var firstTime = step == 1;
+
+            var titleWnd = new TitleWindow(titleString, firstTime);
+
+            if (titleWnd.ShowDialog() != true) return;
+            if (titleWnd.Restart)
+            {
+                SolutionCopyHelper.CopySolution(globalOptions.GetPath(id, PathType.BaseSolutionFolder),
+                    globalOptions.GetPath(id, PathType.WorkCopySolutionFolder));
+
+                GC.Collect();
+                TutorialXmlReader.WriteCurrentStep(globalOptions.GetPath(id, PathType.WorkCopyContentFile), "1");
+
+                VsCommunication.OpenVsSolution(globalOptions.GetPath(id, PathType.WorkCopySolutionFile));
+            }
+            else
+                VsCommunication.OpenVsSolution(globalOptions.GetPath(id, PathType.WorkCopySolutionFile));
+        }
 
     }
 
@@ -29,22 +54,7 @@ namespace pluginTestW04
     {
         protected override void OpenTutorial(IDataContext context, DelegateExecute nextExecute)
         {
-            var globalOptions = context.GetComponent<GlobalOptions>();            
-            var titleString = TutorialXmlReader.ReadIntro(globalOptions.Tutorial1ContentPath);
-            var step = TutorialXmlReader.ReadCurrentStep(globalOptions.Tutorial1ContentPath);
-            var firstTime = step == 1;        
-
-            var titleWnd = new TitleWindow(titleString, firstTime);
-
-            if (titleWnd.Restart)
-            {
-                
-            }
-            else
-            {
-                if (titleWnd.ShowDialog() == true)
-                    VsCommunication.OpenVsSolution(globalOptions.Tutorial1Path);
-            }            
+            OpenOrRestart(context, TutorialId.Tutorial1);
         }
     }
 }

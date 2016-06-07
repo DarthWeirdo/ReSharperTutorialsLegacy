@@ -9,7 +9,7 @@
   </intro>
 
   <steps>
-    <step li="1" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.badlyNamedClass" buttons="next">
+    <step li="1" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.badlyNamedClass" Action="next">
       <text>
         <Run FontSize="20">Alt+Enter</Run> <LineBreak/>
         Used to apply quick fixes to inspections ("squigglies"), or apply context specific actions, depending on location of text caret. Also allows searching and applying all ReSharper commands direct from the menu. <LineBreak/>
@@ -17,7 +17,7 @@
       </text>
     </step>
     
-    <step li="2" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.badlyNamedClass" buttons="next">
+    <step li="2" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.badlyNamedClass" Action="next">
       <text>
         <Run FontSize="20">Apply QuickFix for an inspection</Run><LineBreak/><LineBreak/>
         The <Run FontFamily="Consolas">badlyNamedClass</Run> class doesn't match ReSharper's naming style! Let's fix this:<LineBreak/>
@@ -27,7 +27,7 @@
       </text>
     </step>
 
-    <step li="3" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.ContextAction" method="FormatString" textToFind="arg" textToFindOccurrence ="2" buttons="next">
+    <step li="3" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.ContextAction" method="FormatString" textToFind="arg" textToFindOccurrence ="2" Action="next">
       <text>
         <Run FontSize="20">Apply context action</Run><LineBreak/><LineBreak/>
         1. Place text caret on <Run FontFamily="Consolas">arg</Run>. Note the hammer action - a context action is available.<LineBreak/>
@@ -36,7 +36,7 @@
       </text>
     </step>
 
-    <step li="4" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.GoToAction" buttons="next">
+    <step li="4" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.GoToAction" Action="next">
       <text>
         <Run FontSize="20">Go to action</Run><LineBreak/><LineBreak/>
         1. Place caret on <Run FontFamily="Consolas">GoToAction</Run> class name.<LineBreak/>
@@ -45,7 +45,7 @@
       </text>
     </step>
 
-    <step li="5" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.NavigateTo" buttons="next">
+    <step li="5" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.NavigateTo" Action="next">
       <text>
         <Run FontSize="20">Navigate To menu</Run><LineBreak/><LineBreak/>
         Displays a contextual menu of options you can use to navigate to from your current location.<LineBreak/> 
@@ -55,7 +55,7 @@
       </text>
     </step>
     
-      <step li="6" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.NavigateTo" buttons="next">
+      <step li="6" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.NavigateTo" Action="next">
       <text>
         <Run FontSize="20">List of all possible actions</Run><LineBreak/><LineBreak/>
         1. Place text caret on the <Run FontFamily="Consolas">NavigateTo</Run> class name.<LineBreak/>
@@ -64,7 +64,7 @@
       </text>
     </step>
     
-    <step li="7" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.RefactorThis" buttons="next">
+    <step li="7" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.RefactorThis" Action="next">
       <text>
         <Run FontSize="20">Refactor This menu</Run><LineBreak/><LineBreak/>
         Displays a contextual menu of options for refactoring available at the current location.<LineBreak/> 
@@ -75,7 +75,7 @@
       </text>
     </step>
     
-    <step li="8" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.GenerateCode" buttons="next">
+    <step li="8" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.GenerateCode" Action="next">
       <text>
         <Run FontSize="20">Generate Code menu</Run><LineBreak/><LineBreak/>
         Displays a contextual menu of options for generating code available at the current location.<LineBreak/> 
@@ -87,7 +87,7 @@
       </text>
     </step>
     
-    <step li="9" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.InspectThis" buttons="next">
+    <step li="9" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.InspectThis" Action="next">
       <text>
         <Run FontSize="20">Inspect This menu</Run><LineBreak/><LineBreak/>
         Displays a contextual menu of options for analysing code and control flow available at the current location.<LineBreak/> 
@@ -98,7 +98,7 @@
       </text>
     </step>
     
-    <step li="10" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.InspectThis" buttons="next">
+    <step li="10" project="Tutorial1_EssentialShortcuts" file="2-ContextualMenus.cs" type="Tutorial1_EssentialShortcuts.InspectThis" Action="next">
       <text>
         <Run FontSize="20">That's All!</Run><LineBreak/><LineBreak/>
         Thanks for passing the tutorial. Now you can proceed to the next tutorial that will show you ReSharper navigation tricks.

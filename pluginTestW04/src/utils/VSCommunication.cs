@@ -1,21 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
+using System.Windows;
 using EnvDTE;
-using JetBrains.Application.DataContext;
-using JetBrains.Util;
+using EnvDTE80;
+using JetBrains.Annotations;
 using Process = System.Diagnostics.Process;
 
 namespace pluginTestW04
 {    
 
     public static class VsCommunication
-    {
-
-        public const string PluginName = "huy.pluginTestW04";
+    {        
 
         public static void FindTextInCurrentDocument(string text, int occurrence)
         {
@@ -47,44 +45,58 @@ namespace pluginTestW04
         }
 
 
-        public static string GetTutorialsPath()
+        public static bool GetSolutionSaved()
         {
-            var pluginsPath = Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData) + "\\JetBrains\\plugins";
-            var dirs = Directory.GetDirectories(pluginsPath);
-            string result = null;
-
-            foreach (var dir in dirs.Where(dir => dir.Contains(PluginName)))
-            {
-                result = dir + "\\Tutorials";
-            }
-
-            return result;
+            var vsInstance = GetCurrentVsInstance();
+            var solution = vsInstance?.Solution;
+            return solution != null && solution.Saved;
         }
+
 
         public static void OpenVsSolution(string path)
         {                       
             var vsInstance = GetCurrentVsInstance();
+            var solution = vsInstance?.Solution;
+            solution?.Open(path);
 
-            vsInstance.ExecuteCommand("File.OpenProject", path);            
+//            vsInstance.ExecuteCommand("File.OpenProject", path);            
         }
 
         public static void SaveVsSolution()
         {
             var vsInstance = GetCurrentVsInstance();
+            var solution = vsInstance?.Solution;
+            if (solution == null) return;            
+         
+            if (!solution.Saved)
+                solution.SaveAs(solution.FullName);
 
-            vsInstance.ExecuteCommand("File.SaveAll");
+            for (int i = 1; i <= solution.Projects.Count; i++)
+            {
+                var project = solution.Projects.Item(i);
+                if (!project.Saved)
+                    project.Save();
+
+                for (int j = 1; j <= project.ProjectItems.Count; j++)
+                {
+                    var item = project.ProjectItems.Item(j);
+                    if (!item.Saved)
+                        item.Save();
+                }
+            }
+
+//            vsInstance.ExecuteCommand("File.SaveAll");
         }
 
-        public static void CloseVsSolution()
+        public static void CloseVsSolution(bool saveFirst)
         {
             var vsInstance = GetCurrentVsInstance();
+            var solution = vsInstance?.Solution;
 
-            vsInstance.ExecuteCommand("File.CloseSolution");
+            solution?.Close(saveFirst);
+//            vsInstance.ExecuteCommand("File.CloseSolution");
         }
-
-        public static void UnloadTutorial(GlobalOptions globalOptions)
-        {            
-        }
+        
 
         private static IEnumerable<DTE> EnumVsInstances()
         {            
@@ -111,6 +123,7 @@ namespace pluginTestW04
             }
         }
 
+        [CanBeNull]
         public static DTE GetCurrentVsInstance()
         {            
             IRunningObjectTable rot;
@@ -136,6 +149,7 @@ namespace pluginTestW04
 
         }
 
+        [NotNull]
         public static string GetCurrentSolutionPath()
         {
             var dte = GetCurrentVsInstance();
