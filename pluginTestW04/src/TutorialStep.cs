@@ -1,18 +1,18 @@
 ﻿using System;
 using System.ComponentModel;
-using System.Windows;
 using JetBrains.Annotations;
+using NUnit.Framework;
 
 namespace pluginTestW04
 {
+
+    public enum NextStep { Auto, Manual }
+
     public delegate void StepIsDoneHandler(object sender, EventArgs e);
 
     public class TutorialStep : INotifyPropertyChanged
-    {        
-        // TODO: some event? or property subscribed to event that indicates the step is completed.        
-
-        private string _text;
-        private bool _isDone;
+    {                
+        private string _text;        
 //        private readonly StepActionCheckerEventStyle _stepActionChecker;
 
         public int Id { get; }
@@ -23,11 +23,15 @@ namespace pluginTestW04
         public string TextToFind { get; }
         public int TextToFindOccurrence { get; }
         public string Action { get; }
+        public string Check;
+        /// <summary>
+        /// If NextStep is specified as Manual or not specified, 
+        /// a user can proceed to the next step ONLY by clicking the Next button. 
+        /// </summary>
+        public NextStep NextStep { get; }               
         
-        // TODO: this is the check that must be run after the Action is performed (if it exists).
-        // TODO: all checks can be placed in a separate static class
-        public Func<bool> Check;
-        private bool _isActionDone = false;
+        private bool _isActionDone;
+        private bool _isCheckDone;
         public event StepIsDoneHandler StepIsDone;
 
 
@@ -39,30 +43,32 @@ namespace pluginTestW04
                 if (value == _isActionDone) return;                
                 _isActionDone = value;
 
-                if (Check == null)
-                {
-                    OnStepIsDone();
-                }
+                if (Check == null || IsCheckDone)                
+                    OnStepIsDone();                
             }
         }
 
-        public bool IsCheckDone { get; set; } = false;
-
-        public bool IsDone
+        public bool IsCheckDone
         {
-            get { return _isDone; }
+            get
+            {
+                return _isCheckDone;
+            }
             set
             {
-                if (value == _isDone)
-                    return;
+                if (value == _isCheckDone) return;
+                _isCheckDone = value;
 
-                _isDone = value;
-                OnPropertyChanged("IsDone");
+                if (Action != null && IsActionDone)                
+                    OnStepIsDone();                
+                else if (Action == null)
+                    OnStepIsDone();                
             }
-        }
+        } 
+        
 
         public TutorialStep(int li, string text, string file, string projectName, string typeName, string methodName, 
-            string textToFind, int textToFindOccurrence, string action)
+            string textToFind, int textToFindOccurrence, string action, string check, string nextStep)
         {
             Id = li;
             _text = text;
@@ -72,8 +78,12 @@ namespace pluginTestW04
             TextToFindOccurrence = textToFindOccurrence;
             ProjectName = projectName;
             MethodName = methodName;
-            TextToFind = textToFind;
-            _isDone = false;
+            TextToFind = textToFind;            
+            Check = check;
+
+            if (nextStep != null && nextStep.ToLower() == "auto") NextStep = NextStep.Auto;
+            else NextStep = NextStep.Manual;
+
 
             // trying to implement logic checks right inside step class
 //            if (action != null)

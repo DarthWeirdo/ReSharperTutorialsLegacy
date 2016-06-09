@@ -29,7 +29,7 @@ namespace pluginTestW04
             var events2 = _vsInstance?.Events as Events2;
             if (events2 == null) return;
 
-            _commandEvents = events2.CommandEvents;
+            _commandEvents = events2.CommandEvents;            
 
             lifetime.AddBracket(
                 () => _commandEvents.AfterExecute += CommandEventsOnAfterExecute, 
@@ -48,8 +48,7 @@ namespace pluginTestW04
             {
                 AfterActionApplied.Fire(true);                
             }
-        }
-        
+        }        
     }
 
 

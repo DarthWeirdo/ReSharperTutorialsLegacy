@@ -20,7 +20,7 @@ namespace pluginTestW04
 
     public class Narrator
     {
-        private readonly StepActionChecker _stepActionChecker;
+        private readonly Checker _checker;
         private readonly SourceCodeNavigator _codeNavigator;
         private readonly TutorialWindow _tutorialWindow;
         private readonly string _contentPath;        
@@ -36,14 +36,16 @@ namespace pluginTestW04
         public Narrator(string contentPath, Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,
                                   TextControlManager textControlManager, IShellLocks shellLocks, IEditorManager editorManager, 
                                   DocumentManager documentManager, IUIApplication environment, IActionManager actionManager)
-        {
-            _lifetime = lifetime;
-            _stepActionChecker = new StepActionChecker(lifetime, actionManager);
+        {            
+            _lifetime = lifetime;            
             _contentPath = contentPath;            
             _codeNavigator = new SourceCodeNavigator(lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, 
                 documentManager, environment);
             _tutorialWindow = new TutorialWindow();
             _steps = new Dictionary<int, TutorialStep>();            
+            _checker = new Checker(lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager,
+                actionManager, environment);
+
             LoadTutorialContent(contentPath);
             
             _currentStepId = TutorialXmlReader.ReadCurrentStep(contentPath);
@@ -96,22 +98,17 @@ namespace pluginTestW04
         {            
             ShowText(CurrentStep);            
             _codeNavigator.Navigate(CurrentStep);
-            CurrentStep.StepIsDone += StepOnStepIsDone;
 
-            // Check whether the action specified in the step was applied by user
-            if (CurrentStep.Action != null)
+            if (CurrentStep.NextStep == NextStep.Auto)
             {
-                _stepActionChecker.StepActionName = CurrentStep.Action;
-                _stepActionChecker.AfterActionApplied.Advise(_lifetime, () =>
-                {
-                    CurrentStep.IsActionDone = true;
-                    MessageBox.Show(CurrentStep.Action + " DONE!!!");
-                });
+                _tutorialWindow.HideNextButton();
+                CurrentStep.StepIsDone += StepOnStepIsDone;
+                _checker.PerformStepChecks(CurrentStep);
             }
-            
-            //TODO: check for psi Check using the StepPsiChecker           
-            
+            else if (_currentStepId < _steps.Count - 1)                     
+                _tutorialWindow.ShowNextButton();            
         }
+
 
         private void StepOnStepIsDone(object sender, EventArgs eventArgs)
         {

@@ -159,18 +159,19 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="src\ActionOpenTutorial.cs" />
-    <Compile Include="src\StepActionChecker.cs" />
-    <Compile Include="src\GlobalOptions.cs" />
+    <Compile Include="src\runner\ActionOpenTutorial.cs" />
+    <Compile Include="src\checker\Checker.cs" />
+    <Compile Include="src\checker\StepActionChecker.cs" />
+    <Compile Include="src\runner\GlobalOptions.cs" />
     <Compile Include="src\Narrator.cs" />
-    <Compile Include="src\SolutionStateTracker.cs" />
-    <Compile Include="src\SourceCodeNavigator.cs" />
-    <Compile Include="src\StepPsiChecker.cs" />
-    <Compile Include="src\TutorialRunner.cs" />
-    <Compile Include="src\ActionGroupOpenTutorial.cs" />
+    <Compile Include="src\runner\SolutionStateTracker.cs" />
+    <Compile Include="src\utils\SourceCodeNavigator.cs" />
+    <Compile Include="src\checker\StepPsiChecker.cs" />
+    <Compile Include="src\runner\TutorialRunner.cs" />
+    <Compile Include="src\runner\ActionGroupOpenTutorial.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="src\TutorialStep.cs" />
-    <Compile Include="src\TutorialXmlReader.cs" />
+    <Compile Include="src\utils\TutorialXmlReader.cs" />
     <Compile Include="src\utils\SolutionCopyHelper.cs" />
     <Compile Include="src\utils\TypeElementExtensions.cs" />
     <Compile Include="src\utils\PsiNavigationHelper.cs" />

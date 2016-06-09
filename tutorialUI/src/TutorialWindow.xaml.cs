@@ -127,5 +127,10 @@ namespace tutorialUI
         {
             BtnNext.Visibility = Visibility.Hidden;
         }
+
+        public void ShowNextButton()
+        {
+            BtnNext.Visibility = Visibility.Visible;
+        }
     }
 }
