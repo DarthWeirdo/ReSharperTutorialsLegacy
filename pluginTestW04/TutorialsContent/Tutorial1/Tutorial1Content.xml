@@ -27,7 +27,7 @@
       </text>
     </step>
 
-    <step li="3" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.ContextAction" method="FormatString" textToFind="arg" textToFindOccurrence ="2" >
+    <step li="3" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.ContextAction" method="FormatString" textToFind="arg" textToFindOccurrence ="2" action="ReSharper_AltEnter" check="CheckTutorial1Step3" nextStep="Auto">
       <text>
         <Run FontSize="20">Apply context action</Run><LineBreak/><LineBreak/>
         1. Place text caret on <Run FontFamily="Consolas">arg</Run>. Note the hammer action - a context action is available.<LineBreak/>

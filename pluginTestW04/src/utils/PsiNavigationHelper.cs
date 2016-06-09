@@ -170,7 +170,7 @@ namespace pluginTestW04
             shellLocks.ReentrancyGuard.ExecuteOrQueue("Navigate", () => { targetMethod.Navigate(true);});
             shellLocks.ReentrancyGuard.ExecuteOrQueue("FindText", () =>
             {
-                VsCommunication.FindTextInCurrentDocument(text, textOcc);
+                VsCommunication.NavigateToTextInCurrentDocument(text, textOcc);
             });            
         }
         #endregion
@@ -261,7 +261,8 @@ namespace pluginTestW04
                          where treeNode.GetText() == navText
                          select treeNode;
 
-            return result.AsArray()[occIndex];           
+            return result.AsArray().Length > 0 ? result.AsArray()[occIndex] : null;
+            
         }
 
 

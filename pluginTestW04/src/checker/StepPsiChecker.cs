@@ -70,7 +70,7 @@ namespace pluginTestW04
 
         private void OnPsiChanged()
         {
-            _shellLocks.QueueReadLock("SourceCodeNavigator.CheckOnPsiChanged",
+            _shellLocks.QueueReadLock("StepPsiChecker.CheckOnPsiChanged",
                   () => _psiFiles.CommitAllDocumentsAsync(CheckCode));
         }
 

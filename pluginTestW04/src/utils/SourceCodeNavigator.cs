@@ -35,14 +35,7 @@ namespace pluginTestW04
             _shellLocks = shellLocks;
             _documentManager = documentManager;
             _environment = environment;
-            _editorManager = editorManager;            
-
-            Action<ITreeNode, PsiChangedElementType> psiChanged =
-                (_, __) => OnPsiChanged();
-
-            _lifetime.AddBracket(
-              () => psiFiles.AfterPsiChanged += psiChanged,
-              () => psiFiles.AfterPsiChanged -= psiChanged);                                                                
+            _editorManager = editorManager;                                                                          
         }
 
 
@@ -58,7 +51,7 @@ namespace pluginTestW04
 //                PsiNavigationHelper.NavigateToType(file, step.TypeName, _shellLocks, _lifetime);
 //            
 //            if (step.TextToFind != null)
-//                VsCommunication.FindTextInCurrentDocument(step.TextToFind, step.TextToFindOccurrence);            
+//                VsCommunication.NavigateToTextInCurrentDocument(step.TextToFind, step.TextToFindOccurrence);            
 //        }
 
         public void Navigate(TutorialStep step)
@@ -106,18 +99,6 @@ namespace pluginTestW04
         public ISolution Solution
         {
             get { return _solution; }
-        }
-
-        private void OnPsiChanged()
-        {            
-            _shellLocks.QueueReadLock("SourceCodeNavigator.CheckOnPsiChanged",
-                  () => _psiFiles.CommitAllDocumentsAsync(() => CheckCode()));
-            
-        }
-
-        private void CheckCode()
-        {
-            // TODO: check whether the user updated the code in the way we asked him
         }
     }
 }

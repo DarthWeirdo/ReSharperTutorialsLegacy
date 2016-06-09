@@ -95,6 +95,7 @@ namespace pluginTestW04
             }            
         }
 
+        #region Custom step checks (This must be "public bool" method that returns true if the check passes)
 
         /// <summary>
         /// Example of a PSI check
@@ -113,5 +114,22 @@ namespace pluginTestW04
 
             return node != null;
         }
+
+
+        public bool CheckTutorial1Step3()
+        {
+            ITreeNode node = null;
+            _shellLocks.TryExecuteWithReadLock(() =>
+            {
+                var project = PsiNavigationHelper.GetProjectByName(_solution, _currentStep.ProjectName);
+                var file = PsiNavigationHelper.GetCSharpFile(project, _currentStep.FileName);
+                node = PsiNavigationHelper.GetTreeNodeForStep(file, _currentStep.TypeName, _currentStep.MethodName,
+                    "Format", 1);
+            });
+
+            return node != null;
+        }
+
+        #endregion
     }
 }

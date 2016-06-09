@@ -13,9 +13,16 @@ namespace pluginTestW04
 {    
 
     public static class VsCommunication
-    {        
+    {
 
-        public static void FindTextInCurrentDocument(string text, int occurrence)
+        public static bool FindTextInCurrentDocument(string text)
+        {
+            var vsInstance = GetCurrentVsInstance();
+            var selection = vsInstance?.ActiveDocument.Selection as TextSelection;            
+            return selection != null && selection.FindText(text);            
+        }
+
+        public static void NavigateToTextInCurrentDocument(string text, int occurrence)
         {
             var vsInstance = GetCurrentVsInstance();
             var selection = vsInstance.ActiveDocument.Selection as TextSelection;
