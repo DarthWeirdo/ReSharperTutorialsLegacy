@@ -95,28 +95,48 @@ namespace pluginTestW04
             }            
         }
 
-        #region Custom step checks (This must be "public bool" method that returns true if the check passes)
-
+        #region Typical Checks
         /// <summary>
-        /// Example of a PSI check
+        /// Finds type declaration in scope specified in the current step
         /// </summary>
-        /// <returns>Returns true if BadlyNamedClass is found</returns>
-        public bool CheckTutorial1Step2()
+        /// <returns>Returns true if $typeName$ is found</returns>
+        private bool FindTypeDeclaration(string typeName)
         {
             ITreeNode node = null;
             _shellLocks.TryExecuteWithReadLock(() =>
             {
                 var project = PsiNavigationHelper.GetProjectByName(_solution, _currentStep.ProjectName);
                 var file = PsiNavigationHelper.GetCSharpFile(project, _currentStep.FileName);
-                node = PsiNavigationHelper.GetTypeNodeByFullClrName(file,
-                    "Tutorial1_EssentialShortcuts.BadlyNamedClass");
+                node = PsiNavigationHelper.GetTypeNodeByFullClrName(file, typeName);
             });
 
             return node != null;
         }
 
 
-        public bool CheckTutorial1Step3()
+        /// <summary>
+        /// Finds type declaration in scope specified in the current step
+        /// </summary>
+        /// <returns>Returns true if $typeName$ is found</returns>
+        private bool FindMethodDeclaration(string typeName, string methodName)
+        {
+            ITreeNode node = null;
+            _shellLocks.TryExecuteWithReadLock(() =>
+            {
+                var project = PsiNavigationHelper.GetProjectByName(_solution, _currentStep.ProjectName);
+                var file = PsiNavigationHelper.GetCSharpFile(project, _currentStep.FileName);
+                node = PsiNavigationHelper.GetMethodNodeByFullClrName(file, typeName, methodName);
+            });
+
+            return node != null;
+        }
+
+
+        /// <summary>
+        /// Finds text of a tree node in the scope specified in the current step
+        /// </summary>        
+        /// <returns>Returns true if specific $occurrence$ of $text$ is found</returns>        
+        private bool FindText(string text, int occurrence)
         {
             ITreeNode node = null;
             _shellLocks.TryExecuteWithReadLock(() =>
@@ -124,10 +144,36 @@ namespace pluginTestW04
                 var project = PsiNavigationHelper.GetProjectByName(_solution, _currentStep.ProjectName);
                 var file = PsiNavigationHelper.GetCSharpFile(project, _currentStep.FileName);
                 node = PsiNavigationHelper.GetTreeNodeForStep(file, _currentStep.TypeName, _currentStep.MethodName,
-                    "Format", 1);
+                    text, occurrence);
             });
 
             return node != null;
+        }
+
+
+        #endregion
+
+        #region Custom step checks (This must be "public bool" method that returns true if the check passes)
+
+        /// <summary>
+        /// Example of a PSI check
+        /// </summary>
+        /// <returns>Returns true if BadlyNamedClass is found</returns>
+        public bool CheckTutorial1Step2()
+        {            
+            return FindTypeDeclaration("Tutorial1_EssentialShortcuts.BadlyNamedClass");
+        }
+
+
+        public bool CheckTutorial1Step3()
+        {
+            return FindText("Format", 1);
+        }
+
+
+        public bool CheckTutorial1Step4()
+        {
+            return FindTypeDeclaration("Tutorial1_EssentialShortcuts.Renamed");
         }
 
         #endregion

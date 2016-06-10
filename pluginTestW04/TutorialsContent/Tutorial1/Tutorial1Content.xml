@@ -36,12 +36,13 @@
       </text>
     </step>
 
-    <step li="4" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.GoToAction" >
+    <step li="4" project="Tutorial1_EssentialShortcuts" file="1-AltEnter.cs" type="Tutorial1_EssentialShortcuts.GoToAction" Action="Refactor.Rename" check="CheckTutorial1Step4" nextStep="Auto">
       <text>
         <Run FontSize="20">Go to action</Run><LineBreak/><LineBreak/>
         1. Place caret on <Run FontFamily="Consolas">GoToAction</Run> class name.<LineBreak/>
         2. Hit <Bold>Alt+Enter</Bold>. Note the magnifying glass.<LineBreak/>
         3. Start typing "rename".<LineBreak/>
+        4. Rename the class to <Run FontFamily="Consolas">Renamed</Run>.
       </text>
     </step>
 

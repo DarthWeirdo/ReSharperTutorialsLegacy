@@ -1,6 +1,7 @@
 ﻿using System;
 using System.ComponentModel;
 using JetBrains.Annotations;
+using JetBrains.DataFlow;
 using NUnit.Framework;
 
 namespace pluginTestW04
@@ -33,6 +34,11 @@ namespace pluginTestW04
         private bool _isActionDone;
         private bool _isCheckDone;
         public event StepIsDoneHandler StepIsDone;
+
+        /// <summary>
+        /// Lifetime created for the duration of performing checks
+        /// </summary>
+        private LifetimeDefinition _processingLifetime;        
 
 
         public bool IsActionDone
@@ -80,10 +86,11 @@ namespace pluginTestW04
             MethodName = methodName;
             TextToFind = textToFind;            
             Check = check;
+            _processingLifetime = null;
 
             if (nextStep != null && nextStep.ToLower() == "auto") NextStep = NextStep.Auto;
             else NextStep = NextStep.Manual;
-
+            
 
             // trying to implement logic checks right inside step class
 //            if (action != null)
@@ -130,7 +137,16 @@ namespace pluginTestW04
 
         protected virtual void OnStepIsDone()
         {
+            _processingLifetime.Terminate();
             StepIsDone?.Invoke(this, EventArgs.Empty);
+        }
+
+
+        public void PerformChecks(Narrator ownerNarrator)
+        {            
+            _processingLifetime = Lifetimes.Define(ownerNarrator.Lifetime);
+            var checker = new Checker(_processingLifetime.Lifetime, ownerNarrator.Solution, ownerNarrator.PsiFiles, ownerNarrator.TextControlManager, ownerNarrator.ShellLocks, ownerNarrator.EditorManager, ownerNarrator.DocumentManager, ownerNarrator.ActionManager, ownerNarrator.Environment);
+            checker.PerformStepChecks(this);
         }
     }
 }
