@@ -145,8 +145,8 @@ namespace pluginTestW04
         public void PerformChecks(Narrator ownerNarrator)
         {            
             _processingLifetime = Lifetimes.Define(ownerNarrator.Lifetime);
-            var checker = new Checker(_processingLifetime.Lifetime, ownerNarrator.Solution, ownerNarrator.PsiFiles, ownerNarrator.TextControlManager, ownerNarrator.ShellLocks, ownerNarrator.EditorManager, ownerNarrator.DocumentManager, ownerNarrator.ActionManager, ownerNarrator.Environment);
-            checker.PerformStepChecks(this);
+            var checker = new Checker(_processingLifetime.Lifetime, this, ownerNarrator.Solution, ownerNarrator.PsiFiles, ownerNarrator.TextControlManager, ownerNarrator.ShellLocks, ownerNarrator.EditorManager, ownerNarrator.DocumentManager, ownerNarrator.ActionManager, ownerNarrator.Environment);
+            checker.PerformStepChecks();
         }
     }
 }

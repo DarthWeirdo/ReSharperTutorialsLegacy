@@ -25,7 +25,7 @@ namespace pluginTestW04
 
         public void OpenOrRestart(IDataContext context, TutorialId id)
         {
-            var globalOptions = context.GetComponent<GlobalOptions>();
+            var globalOptions = context.GetComponent<GlobalSettings>();
             var titleString = TutorialXmlReader.ReadIntro(globalOptions.GetPath(id, PathType.WorkCopyContentFile));
             var step = TutorialXmlReader.ReadCurrentStep(globalOptions.GetPath(id, PathType.WorkCopyContentFile));
             var firstTime = step == 1;

@@ -15,12 +15,12 @@ namespace pluginTestW04
     }
     
     [ShellComponent]
-    public class GlobalOptions
+    public class GlobalSettings
     {                
         private readonly string _commonTutorialPath;
         private readonly string _commonWorkCopyPath;
 
-        public GlobalOptions([NotNull]Lifetime lifetime)
+        public GlobalSettings([NotNull]Lifetime lifetime)
         {        
             _commonTutorialPath = SolutionCopyHelper.GetTutorialsPath();
             _commonWorkCopyPath = SolutionCopyHelper.GetWorkingCopyPath();

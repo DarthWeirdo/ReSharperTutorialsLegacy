@@ -28,7 +28,7 @@ namespace pluginTestW04
         /// <summary>
         /// This method checks whether a user have done all the actions 
         /// required by the step by checking the Psi tree. It corresponds
-        /// to a method of the static Check class and is run on every Psi change.
+        /// to a method of the Checker class and is run on every Psi change.
         /// </summary>
         public Func<bool> Check;
 

@@ -20,15 +20,15 @@ namespace pluginTestW04
 
         public TutorialRunner([NotNull] Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,
                                   [NotNull] ISolutionStateTracker solutionStateTracker,
-                                  [NotNull] GlobalOptions globalOptions, TextControlManager textControlManager, IShellLocks shellLocks,
+                                  [NotNull] GlobalSettings globalSettings, TextControlManager textControlManager, IShellLocks shellLocks,
                                   IEditorManager editorManager, DocumentManager documentManager, IUIApplication environment, IActionManager actionManager)
         {
             if (lifetime == null)
                 throw new ArgumentNullException("lifetime");
             if (solutionStateTracker == null)
                 throw new ArgumentNullException("solutionStateTracker");
-            if (globalOptions == null)
-                throw new ArgumentNullException("globalOptions");
+            if (globalSettings == null)
+                throw new ArgumentNullException("globalSettings");
             
             // solutionStateTracker.BeforeSolutionClosed.Advise(lifetime, () =>{...});
             lifetime.AddAction(() =>
@@ -39,13 +39,13 @@ namespace pluginTestW04
                 }
             });
                             
-            // TODO: replace with foreach; make List<> globalOptions.TutorialPaths
+            // TODO: replace with foreach; make List<> GlobalSettings.TutorialPaths
             if (VsCommunication.GetCurrentSolutionPath() ==
-                globalOptions.GetPath(TutorialId.Tutorial1, PathType.WorkCopySolutionFile))
+                globalSettings.GetPath(TutorialId.Tutorial1, PathType.WorkCopySolutionFile))
             {
-//                solutionStateTracker.AfterSolutionOpened.Advise(lifetime, sol => RunTutorial(globalOptions.GetPath(TutorialId.Tutorial1, PathType.WorkCopyContentFile), lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager, environment));
+//                solutionStateTracker.AfterSolutionOpened.Advise(lifetime, sol => RunTutorial(GlobalSettings.GetPath(TutorialId.Tutorial1, PathType.WorkCopyContentFile), lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager, environment));
 
-                solutionStateTracker.AfterPsiLoaded.Advise(lifetime, sol => RunTutorial(globalOptions.GetPath(TutorialId.Tutorial1, PathType.WorkCopyContentFile), lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager, environment, actionManager));
+                solutionStateTracker.AfterPsiLoaded.Advise(lifetime, sol => RunTutorial(globalSettings.GetPath(TutorialId.Tutorial1, PathType.WorkCopyContentFile), lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager, environment, actionManager));
             }            
         }
 

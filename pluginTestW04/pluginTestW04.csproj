@@ -159,10 +159,12 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="src\checker\RunCheckAttribute.cs" />
+    <Compile Include="src\checker\StepNavigationChecker.cs" />
     <Compile Include="src\runner\ActionOpenTutorial.cs" />
     <Compile Include="src\checker\Checker.cs" />
     <Compile Include="src\checker\StepActionChecker.cs" />
-    <Compile Include="src\runner\GlobalOptions.cs" />
+    <Compile Include="src\runner\GlobalSettings.cs" />
     <Compile Include="src\Narrator.cs" />
     <Compile Include="src\runner\SolutionStateTracker.cs" />
     <Compile Include="src\utils\SourceCodeNavigator.cs" />

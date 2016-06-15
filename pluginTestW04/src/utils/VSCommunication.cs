@@ -100,8 +100,12 @@ namespace pluginTestW04
             var vsInstance = GetCurrentVsInstance();
             var solution = vsInstance?.Solution;
 
-            solution?.Close(saveFirst);
-//            vsInstance.ExecuteCommand("File.CloseSolution");
+            //            solution?.Close(saveFirst);
+            if (solution == null) return;
+            if (saveFirst)
+                SaveVsSolution();
+            
+            vsInstance.ExecuteCommand("File.CloseSolution");
         }
         
 
