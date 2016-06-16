@@ -50,11 +50,12 @@
         </Style>
 
         <Style x:Key="StyleCloseButton" TargetType="Button">
-            <Setter Property="Background" Value="#F8D1D5" />
+<!--            <Setter Property="Background" Value="#F8D1D5" />-->
+            <Setter Property="Background" Value="#CDEDEEF8" />
             <Setter Property="Padding" Value="8,4" />
             <Setter Property="Margin" Value="4" />
             <Setter Property="Height" Value="25"/>
-            <Setter Property="Width" Value="90"/>
+            <Setter Property="Width" Value="70"/>
             <Setter Property="HorizontalAlignment" Value="Left"/>
             <Setter Property="VerticalAlignment" Value="Bottom"/>
             <Setter Property="Template">
@@ -68,7 +69,8 @@
             </Setter>
             <Style.Triggers>
                 <Trigger Property="IsMouseOver" Value="True">
-                    <Setter Property="Background" Value="#F8838F"/>
+<!--                    <Setter Property="Background" Value="#F8838F"/>-->
+                    <Setter Property="Background" Value="#9DA1F8"/>
                 </Trigger>
             </Style.Triggers>
         </Style>
@@ -139,8 +141,8 @@
             <Line Grid.Row="0" Style="{StaticResource horizontalLineStyle}" />
             
             <Button x:Name="BtnSaveClose" Style="{StaticResource StyleCloseButton}" Grid.Row="1" Margin="10 10 10 10"
-                ToolTip="Save current tutorial progress and close the solution">
-                Save&amp;Close 
+                ToolTip="Close the tutorial solution">
+                Close 
             </Button>
         
             <Button x:Name="BtnPrev" Style="{StaticResource StyleButton}" Grid.Row="1" Margin="0,0,90,10" Visibility="Hidden">Previous

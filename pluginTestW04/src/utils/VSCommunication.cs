@@ -3,13 +3,11 @@ using System.Collections.Generic;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Runtime.InteropServices.ComTypes;
-using System.Windows;
 using EnvDTE;
-using EnvDTE80;
 using JetBrains.Annotations;
 using Process = System.Diagnostics.Process;
 
-namespace pluginTestW04
+namespace pluginTestW04.utils
 {    
 
     public static class VsCommunication
@@ -52,7 +50,7 @@ namespace pluginTestW04
         }
 
 
-        public static bool GetSolutionSaved()
+        public static bool IsSolutionSaved()
         {
             var vsInstance = GetCurrentVsInstance();
             var solution = vsInstance?.Solution;

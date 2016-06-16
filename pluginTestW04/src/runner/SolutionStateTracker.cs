@@ -6,7 +6,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ProjectModel.Tasks;
 using JetBrains.ReSharper.Psi;
 
-namespace pluginTestW04
+namespace pluginTestW04.runner
 {
     public interface ISolutionStateTracker
     {

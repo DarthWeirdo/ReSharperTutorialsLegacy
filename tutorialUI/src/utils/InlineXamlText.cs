@@ -1,12 +1,11 @@
 ﻿using System.IO;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Documents;
 using System.Windows.Markup;
 using System.Xml;
 
-namespace tutorialUI
+namespace tutorialUI.utils
 {
     public class InlineXamlText
     {

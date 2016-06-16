@@ -1,5 +1,4 @@
-﻿using System;
-using JetBrains.Application;
+﻿using JetBrains.Application;
 using JetBrains.DataFlow;
 using JetBrains.DocumentManagers;
 using JetBrains.IDE;
@@ -10,7 +9,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
 
-namespace pluginTestW04
+namespace pluginTestW04.utils
 {
     public class SourceCodeNavigator
     {
@@ -39,23 +38,11 @@ namespace pluginTestW04
         }
 
 
-//        public void NavigateOld(TutorialStep step)
-//        {
-//            var project = PsiNavigationHelper.GetProjectByName(Solution, step.ProjectName);
-//
-//            var file = PsiNavigationHelper.GetCSharpFile(project, step.FileName);
-//
-//            if (step.MethodName != null)
-//                PsiNavigationHelper.NavigateToMethod(file, step.TypeName, step.MethodName, _shellLocks, _lifetime);
-//            else
-//                PsiNavigationHelper.NavigateToType(file, step.TypeName, _shellLocks, _lifetime);
-//            
-//            if (step.TextToFind != null)
-//                VsCommunication.NavigateToTextInCurrentDocument(step.TextToFind, step.TextToFindOccurrence);            
-//        }
-
         public void Navigate(TutorialStep step)
         {
+            if (step.TypeName == null && step.MethodName == null && step.TextToFind == null)            
+                return;            
+
             _shellLocks.ExecuteOrQueueReadLock(_lifetime, "Navigate", () =>
             {
                 var project = PsiNavigationHelper.GetProjectByName(Solution, step.ProjectName);
@@ -79,8 +66,7 @@ namespace pluginTestW04
                 var projectFile = _documentManager.TryGetProjectFile(range.Document);
                 if (projectFile == null) return;
 
-                var textControl = _editorManager.OpenProjectFile(projectFile, activate);
-                if (textControl == null) return;
+                var textControl = _editorManager.OpenProjectFile(projectFile, activate);                
 
                 textControl.Caret.MoveTo(
                     range.TextRange.StartOffset, CaretVisualPlacement.DontScrollIfVisible);

@@ -6,18 +6,16 @@ using JetBrains.DocumentManagers;
 using JetBrains.DocumentManagers.Transactions;
 using JetBrains.IDE;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Features.Internal.PsiBrowser;
 using JetBrains.ReSharper.Psi;
-using JetBrains.ReSharper.Psi.CSharp.Impl.DocComments;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
 using JetBrains.Util;
 
-namespace pluginTestW04
+namespace pluginTestW04.checker
 {
-    class StepNavigationChecker
+    internal class StepNavigationChecker
     {
         private readonly Lifetime _lifetime;
         private readonly ISolution _solution;
@@ -96,10 +94,6 @@ namespace pluginTestW04
             if (textControl == null)
                 return null;
 
-//            if (textControl == null
-//              || GetProjectFile(textControl) != projectFile
-//              || projectFile == null || !IsUpToDate()) return null;
-
             var range = textControl.Selection.HasSelection()
                 ? textControl.Selection.RandomRange()
                 : new TextRange(textControl.Caret.Offset());
@@ -111,26 +105,12 @@ namespace pluginTestW04
 
             var element = file?.FindNodeAt(documentRange);
             return element;
-
-//            foreach (var language in psiSourceFile.GetLanguages())
-//            {
-//                var documentRange = range.CreateDocumentRange(projectFile);
-//                var file = psiSourceFile.GetPsiFile(language, documentRange);
-//                if (file == null) continue;
-//
-////                if (PsiBrowserSettings.Instance.DisplayLanguage != null &&
-////                    !PsiBrowserSettings.Instance.DisplayLanguage.Equals(file.Language))
-////                    continue;
-//
-//                var element = file.FindNodeAt(documentRange);
-//            }
         }
 
         [CanBeNull]
         private IProjectFile GetProjectFile([CanBeNull] ITextControl textControl)
         {
-            if (textControl == null) return null;
-            return _documentManager.TryGetProjectFile(textControl.Document);
+            return textControl == null ? null : _documentManager.TryGetProjectFile(textControl.Document);
         }
     }
 }

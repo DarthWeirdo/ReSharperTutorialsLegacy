@@ -12,15 +12,13 @@ using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Caches;
 using JetBrains.ReSharper.Psi.CSharp;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
-using JetBrains.ReSharper.Psi.ExtensionsAPI.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Paths;
 using JetBrains.ReSharper.Psi.Tree;
-using JetBrains.ReSharper.Resources.Shell;
 using JetBrains.Util;
 using PlatformID = JetBrains.Application.platforms.PlatformID;
 
-namespace pluginTestW04
+namespace pluginTestW04.utils
 {
     public static class PsiNavigationHelper
     {        
@@ -60,8 +58,7 @@ namespace pluginTestW04
 
         private static IEnumerable<ITypeElement> SkipDefaultProfileIfRuntimeExist(IEnumerable<ITypeElement> validTypeElements)
         {
-            return validTypeElements
-              // Merge default and runtime profiles into one group to select runtime from there
+            return validTypeElements              
               .GroupBy(typeElement => typeElement.GetPlatformId(), DefaultPlatformUtil.IgnoreRuntimeAndDefaultProfilesComparer)
               .Select(TypeFromRuntimeProfilePlatformIfExist);
         }
@@ -180,26 +177,13 @@ namespace pluginTestW04
         {
             var treeNodeList = file.EnumerateTo(file.LastChild);
 
-            List<ITreeNode> resultList = new List<ITreeNode>();
-
-            foreach (var node in treeNodeList)
-            {
-                var element = GetDeclaredElement(node);
-                var typeElement = element as ITypeElement;
-                if (typeElement != null && typeElement.GetFullClrName() == name)
-                {   
-                    resultList.Add(node);
-                }                
-            }
+            var resultList = (from node in treeNodeList
+                              let element = GetDeclaredElement(node)
+                              let typeElement = element as ITypeElement
+                              where typeElement != null && typeElement.GetFullClrName() == name
+                              select node).ToList();
 
             return resultList.FirstOrDefault();
-
-//            return (from treeNode in treeNodeList
-//                let element = GetDeclaredElement(treeNode)
-//                let typeElement = element as ITypeElement
-//                where typeElement != null
-//                where typeElement.GetFullClrName() == name
-//                select treeNode).FirstOrDefault();
         }
 
 

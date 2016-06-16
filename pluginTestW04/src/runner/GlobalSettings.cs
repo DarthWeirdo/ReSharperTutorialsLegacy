@@ -1,10 +1,12 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.DataFlow;
+using pluginTestW04.utils;
 
-namespace pluginTestW04
+namespace pluginTestW04.runner
 {
     public enum TutorialId { None, Tutorial1, Tutorial2, Tutorial3, Tutorial4, Tutorial5 }
 
@@ -19,6 +21,7 @@ namespace pluginTestW04
     {                
         private readonly string _commonTutorialPath;
         private readonly string _commonWorkCopyPath;
+        public readonly Dictionary<TutorialId, string> AvailableTutorials;
 
         public GlobalSettings([NotNull]Lifetime lifetime)
         {        
@@ -28,9 +31,14 @@ namespace pluginTestW04
             if (_commonTutorialPath == null || _commonWorkCopyPath == null)
                 throw new DirectoryNotFoundException("Unable to find the folder with sample solutions. Please reinstall the plugin");
 
+            AvailableTutorials = new Dictionary<TutorialId, string>
+            {
+                {TutorialId.Tutorial1, GetPath(TutorialId.Tutorial1, PathType.WorkCopySolutionFile)}
+            };
+
         }
 
-        public string GetPath(TutorialId tutorialId, PathType pathType)
+        public string GetPath(TutorialId tutorialId, PathType pType)
         {
             switch (tutorialId)
             {
@@ -38,7 +46,7 @@ namespace pluginTestW04
                     break;
 
                 case TutorialId.Tutorial1:
-                    switch (pathType)
+                    switch (pType)
                     {
                         case PathType.BaseSolutionFolder:
                             return _commonTutorialPath + "\\Tutorial1_EssentialShortcuts";
@@ -55,10 +63,10 @@ namespace pluginTestW04
                         case PathType.WorkCopySolutionFile:
                             return _commonWorkCopyPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
                         case PathType.WorkCopyContentFile:
-                            return _commonWorkCopyPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";
+                            return _commonWorkCopyPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";                        
                         default:
-                            throw new ArgumentOutOfRangeException(nameof(pathType), pathType, null);
-                    }                    
+                            throw new ArgumentOutOfRangeException(nameof(pType), pType, null);
+                    }
 
                 case TutorialId.Tutorial2:
                     break;
@@ -68,8 +76,6 @@ namespace pluginTestW04
                     break;
                 case TutorialId.Tutorial5:
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException(nameof(tutorialId), tutorialId, null);
             }
             return null;
         }

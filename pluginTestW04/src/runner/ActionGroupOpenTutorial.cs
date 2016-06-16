@@ -1,7 +1,7 @@
 ﻿using JetBrains.UI.ActionsRevised;
 using JetBrains.UI.MenuGroups;
 
-namespace pluginTestW04
+namespace pluginTestW04.runner
 {
     [ActionGroup("ActionGroupOpenTutorial", ActionGroupInsertStyles.Submenu, Text = "Tutorials", Id = 200)]
     public class ActionGroupOpenTutorial : IAction, IInsertLast<MainMenuFeaturesGroup>

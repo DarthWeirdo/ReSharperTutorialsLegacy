@@ -1,29 +1,24 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
-using System.Windows;
 using JetBrains.ActionManagement;
-using JetBrains.Annotations;
 using JetBrains.Application;
 using JetBrains.DataFlow;
 using JetBrains.DocumentManagers;
 using JetBrains.IDE;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Features.Internal.PsiBrowser;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.CSharp.Tree;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
-using JetBrains.TreeModels;
-using JetBrains.UI.Actions.ActionManager;
 using JetBrains.UI.Application;
 using JetBrains.Util;
+using pluginTestW04.utils;
 
-namespace pluginTestW04
+namespace pluginTestW04.checker
 {
-    class Checker
+    internal class Checker
     {
         private readonly Lifetime _lifetime;
         private readonly ISolution _solution;
@@ -128,64 +123,7 @@ namespace pluginTestW04
             _stepActionChecker.AfterActionApplied.Advise(_lifetime, 
                 () => { _currentStep.IsActionDone = true; });
         }
-
-
-        public void PerformStepChecksOld(TutorialStep step)
-        {
-            // old
-            if (_currentStep.Action != null)
-            {
-                _stepActionChecker.StepActionName = _currentStep.Action;
-
-                _stepActionChecker.AfterActionApplied.Advise(_lifetime, () => { _currentStep.IsActionDone = true; });
-            }
-
-            if (_currentStep.Check != null)
-            {
-                MethodInfo mInfo = typeof (Checker).GetMethod(_currentStep.Check);
-                if (mInfo != null)
-                {
-                    var checkMethod = (Func<bool>) Delegate.CreateDelegate(typeof (Func<bool>), this, mInfo);
-                    var attr = (RunCheckAttribute) mInfo.GetCustomAttribute(typeof (RunCheckAttribute));
-
-                    switch (attr.OnEvent)
-                    {
-                        case OnEvent.PsiChange:
-                            _stepPsiChecker.Check = checkMethod;
-                            _stepPsiChecker.AfterPsiChangesDone.Advise(_lifetime,
-                                () => { _currentStep.IsCheckDone = true; });
-                            break;
-                        case OnEvent.CaretMove:
-                            _stepNavigationChecker.Check = checkMethod;
-                            _stepNavigationChecker.AfterNavigationDone.Advise(_lifetime,
-                                () => { _currentStep.IsCheckDone = true; });
-                            // simple check if we are in the right place.
-                            // IMPORTANT: if check fails after the right action, make _currentStep.IsActionDone = false
-                            // this will allow a user to run the right action one more time and to run the nav check one more time
-                            // It must be almost the same check as for Psi - we find ITreeNode by name or text and then check
-                            // whether the caret is positioned on that ITreeNode
-                            break;
-                        case OnEvent.AfterAction:
-                            _stepActionChecker.StepActionName = _currentStep.Action;                            
-                            _stepActionChecker.AfterActionApplied.Advise(_lifetime,
-                                () =>
-                                {
-                                    _currentStep.IsActionDone = true;
-                                    if (checkMethod.Invoke())                                    
-                                        _currentStep.IsCheckDone = true;                                    
-                                    else                                    
-                                        _currentStep.IsActionDone = false;                                    
-                                });
-                            break;
-                        default:
-                            throw new ArgumentOutOfRangeException(
-                                $"Unable to run the check: method {_currentStep.Check} must be marked with the RunCheckAttribute");
-                    }
-                }
-                else
-                    throw new Exception($"Unable to find the checker {_currentStep.Check}. Please reinstall the plugin.");
-            }
-        }
+       
 
         #region Typical Checks
 
@@ -357,10 +295,9 @@ namespace pluginTestW04
         public bool CheckTutorial1Step5()
         {
             var node = _stepNavigationChecker.GetTreeNodeUnderCaret();
-            var parentNode = node?.Parent;                        
-            var element = parentNode as ITypeDeclaration;
+            var parentNode = node?.Parent as ITypeDeclaration;
             
-            return element != null && element.DeclaredName == "SomeClass";
+            return parentNode != null && parentNode.DeclaredName == "SomeClass";
         }
 
         #endregion

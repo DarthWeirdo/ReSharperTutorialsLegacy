@@ -1,11 +1,11 @@
 ﻿using System;
 
-namespace pluginTestW04
+namespace pluginTestW04.checker
 {
-    enum OnEvent {None, PsiChange, CaretMove, AfterAction}
+    internal enum OnEvent {None, PsiChange, CaretMove, AfterAction}
 
     [AttributeUsage(AttributeTargets.Method)]
-    class RunCheckAttribute : Attribute
+    internal class RunCheckAttribute : Attribute
     {
         public readonly OnEvent OnEvent;
 

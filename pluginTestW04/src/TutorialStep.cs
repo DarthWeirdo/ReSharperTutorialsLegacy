@@ -2,7 +2,7 @@
 using System.ComponentModel;
 using JetBrains.Annotations;
 using JetBrains.DataFlow;
-using NUnit.Framework;
+using pluginTestW04.checker;
 
 namespace pluginTestW04
 {
@@ -14,7 +14,6 @@ namespace pluginTestW04
     public class TutorialStep : INotifyPropertyChanged
     {                
         private string _text;        
-//        private readonly StepActionCheckerEventStyle _stepActionChecker;
 
         public int Id { get; }
         public string ProjectName { get;}
@@ -89,28 +88,8 @@ namespace pluginTestW04
             _processingLifetime = null;
 
             if (nextStep != null && nextStep.ToLower() == "auto") NextStep = NextStep.Auto;
-            else NextStep = NextStep.Manual;
-            
-
-            // trying to implement logic checks right inside step class
-//            if (action != null)
-//            {
-//                _stepActionChecker = new StepActionCheckerEventStyle(action);
-//                _stepActionChecker.ActionApplied += StepActionCheckerOnActionApplied;
-//            }                                    
+            else NextStep = NextStep.Manual;                                   
         }
-
-//        public void Unsubscribe()
-//        {
-//            if (Action != null)            
-//                _stepActionChecker.ActionApplied -= StepActionCheckerOnActionApplied;                        
-//        }
-//
-//        private void StepActionCheckerOnActionApplied(object sender, EventArgs eventArgs)
-//        {
-//            IsActionDone = true;
-//            MessageBox.Show(Action, " DONE!!!");
-//        }
 
 
         public string Text

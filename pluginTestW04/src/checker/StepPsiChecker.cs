@@ -10,9 +10,9 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
 
-namespace pluginTestW04
+namespace pluginTestW04.checker
 {
-    class StepPsiChecker
+    internal class StepPsiChecker
     {
 
         private readonly Lifetime _lifetime;

@@ -1,11 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
-using JetBrains.Application.DataContext;
 using JetBrains.DataFlow;
 using JetBrains.DocumentManagers;
 using JetBrains.IDE;
@@ -13,6 +10,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
+using pluginTestW04.utils;
 using tutorialUI;
 
 namespace pluginTestW04
@@ -20,11 +18,10 @@ namespace pluginTestW04
 
     public class Narrator
     {
-//        private readonly Checker _checker;
         private readonly SourceCodeNavigator _codeNavigator;
         private readonly TutorialWindow _tutorialWindow;
         private readonly string _contentPath;        
-        private Dictionary<int, TutorialStep> _steps;        
+        private readonly Dictionary<int, TutorialStep> _steps;        
         private int _currentStepId;
 
         public readonly Lifetime Lifetime;
@@ -36,9 +33,7 @@ namespace pluginTestW04
         public readonly DocumentManager DocumentManager;
         public readonly IUIApplication Environment;
         public readonly IActionManager ActionManager;
-        public TutorialStep CurrentStep { get; set; }
-
-        public bool SolutionSaved => VsCommunication.GetSolutionSaved();
+        public TutorialStep CurrentStep { get; set; }        
 
 
         public Narrator(string contentPath, Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,
@@ -58,12 +53,9 @@ namespace pluginTestW04
             _codeNavigator = new SourceCodeNavigator(lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, 
                 documentManager, environment);
             _tutorialWindow = new TutorialWindow();
-            _steps = new Dictionary<int, TutorialStep>();            
-//            _checker = new Checker(lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager,
-//                actionManager, environment);
+            _steps = new Dictionary<int, TutorialStep>();
+            _steps = TutorialXmlReader.ReadTutorialSteps(contentPath);
 
-            LoadTutorialContent(contentPath);
-            
             _currentStepId = TutorialXmlReader.ReadCurrentStep(contentPath);
             CurrentStep = _steps[_currentStepId];            
 
@@ -72,33 +64,34 @@ namespace pluginTestW04
         }
             
         public void SaveAndClose(object sender, RoutedEventArgs args)
-        {            
-            TutorialXmlReader.WriteCurrentStep(_contentPath, _currentStepId.ToString());
+        {                        
             _tutorialWindow.Unsubscribe();
             _tutorialWindow.Close();
 
-            VsCommunication.CloseVsSolution(sender.GetType() != typeof (TutorialRunner));
+            // TODO: The suggestion is to remove saving functionality at all
+            VsCommunication.CloseVsSolution(true);
+            /* if (sender.GetType() != typeof(TutorialRunner))
+            {
+                TutorialXmlReader.WriteCurrentStep(_contentPath, _currentStepId.ToString());
+                VsCommunication.CloseVsSolution(true);
+            }
+            else
+            {
+                var trArgs = (TutorialRunnerEventArgs) args;
+                if (trArgs.SolutionSaved)               
+                    TutorialXmlReader.WriteCurrentStep(_contentPath, _currentStepId.ToString());                
+            }*/
         }
 
         private void GoNext(object sender, RoutedEventArgs args)
         {
-            if (_currentStepId == _steps.Count - 1)
-            {
-                _tutorialWindow.HideNextButton();
-                return;
-            }
+            if (_currentStepId == _steps.Count) return;            
 
             _currentStepId++;
             CurrentStep = _steps[_currentStepId];
             ProcessStep();            
         }
 
-
-        private void LoadTutorialContent(string contentPath)
-        {
-            // TODO: Probably we should do this async if content loading is too long + display progress
-            _steps = TutorialXmlReader.ReadTutorialSteps(contentPath);
-        }
 
         public void Start()
         {                 
@@ -112,15 +105,18 @@ namespace pluginTestW04
             ShowText(CurrentStep);            
             _codeNavigator.Navigate(CurrentStep);
 
-            if (CurrentStep.NextStep == NextStep.Auto)
+            if (CurrentStep.NextStep == NextStep.Auto) 
             {
                 _tutorialWindow.HideNextButton();
                 CurrentStep.StepIsDone += StepOnStepIsDone;
                 CurrentStep.PerformChecks(this);
-//                _checker.PerformStepChecks(CurrentStep);
             }
-            else if (_currentStepId < _steps.Count - 1)                     
-                _tutorialWindow.ShowNextButton();            
+            else
+                _tutorialWindow.ShowNextButton();
+
+            if (_currentStepId == _steps.Count)            
+                _tutorialWindow.HideNextButton();
+                              
         }
 
 

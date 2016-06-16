@@ -2,7 +2,7 @@
 using System.IO;
 using System.Linq;
 
-namespace pluginTestW04
+namespace pluginTestW04.utils
 {
     public static class SolutionCopyHelper
     {

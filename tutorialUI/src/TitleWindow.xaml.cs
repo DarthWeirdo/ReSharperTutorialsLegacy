@@ -1,5 +1,6 @@
 ﻿using System.Windows;
 using System.Windows.Input;
+using tutorialUI.utils;
 
 
 namespace tutorialUI
@@ -50,7 +51,10 @@ namespace tutorialUI
 
         private void BtnStart_Click(object sender, RoutedEventArgs e)
         {
-            Restart = false;
+            // TODO: Remove saving functionality at all
+            Restart = true;            
+            //            Restart = false;
+
             DialogResult = true;            
         }
 

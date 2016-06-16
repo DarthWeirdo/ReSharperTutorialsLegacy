@@ -6,12 +6,12 @@ using JetBrains.DataFlow;
 using JetBrains.DocumentManagers;
 using JetBrains.IDE;
 using JetBrains.ProjectModel;
-using JetBrains.ReSharper.Intentions.Bulbs;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
+using pluginTestW04.utils;
 
-namespace pluginTestW04
+namespace pluginTestW04.runner
 {       
     [SolutionComponent]
     public class TutorialRunner
@@ -29,24 +29,21 @@ namespace pluginTestW04
                 throw new ArgumentNullException("solutionStateTracker");
             if (globalSettings == null)
                 throw new ArgumentNullException("globalSettings");
-            
-            // solutionStateTracker.BeforeSolutionClosed.Advise(lifetime, () =>{...});
+                        
             lifetime.AddAction(() =>
             {
-                if (_narrator.SolutionSaved)
-                {
-                    _narrator.SaveAndClose(this, null);
-                }
+                var args = new TutorialRunnerEventArgs(VsCommunication.IsSolutionSaved());
+                _narrator.SaveAndClose(this, args);                
             });
-                            
-            // TODO: replace with foreach; make List<> GlobalSettings.TutorialPaths
-            if (VsCommunication.GetCurrentSolutionPath() ==
-                globalSettings.GetPath(TutorialId.Tutorial1, PathType.WorkCopySolutionFile))
-            {
-//                solutionStateTracker.AfterSolutionOpened.Advise(lifetime, sol => RunTutorial(GlobalSettings.GetPath(TutorialId.Tutorial1, PathType.WorkCopyContentFile), lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager, environment));
 
-                solutionStateTracker.AfterPsiLoaded.Advise(lifetime, sol => RunTutorial(globalSettings.GetPath(TutorialId.Tutorial1, PathType.WorkCopyContentFile), lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager, environment, actionManager));
-            }            
+            foreach (var tutorial in globalSettings.AvailableTutorials)
+            {
+                if (VsCommunication.GetCurrentSolutionPath() == tutorial.Value)
+                {
+                    solutionStateTracker.AfterPsiLoaded.Advise(lifetime, 
+                    sol => RunTutorial(globalSettings.GetPath(tutorial.Key, PathType.WorkCopyContentFile), lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager, documentManager, environment, actionManager));                    
+                }
+            }                                              
         }
 
         private void RunTutorial(string contentPath, Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,                                 

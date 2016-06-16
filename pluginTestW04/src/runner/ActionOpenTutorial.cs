@@ -1,12 +1,11 @@
 ﻿using System;
-using System.Windows;
 using JetBrains.ActionManagement;
 using JetBrains.Application.DataContext;
 using JetBrains.UI.ActionsRevised;
-using JetBrains.Util;
+using pluginTestW04.utils;
 using tutorialUI;
 
-namespace pluginTestW04
+namespace pluginTestW04.runner
 {    
     public abstract class ActionOpenTutorial : IExecutableAction
     {

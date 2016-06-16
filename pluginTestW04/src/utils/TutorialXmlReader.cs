@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 using System.Xml;
-using System.Xml.Linq;
-using JetBrains.Util;
 
-namespace pluginTestW04
+namespace pluginTestW04.utils
 {
     public static class TutorialXmlReader
     {
