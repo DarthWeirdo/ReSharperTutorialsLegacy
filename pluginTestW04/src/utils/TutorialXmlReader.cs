@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using System.Xml;
+using pluginTestW04.narrator;
 
 namespace pluginTestW04.utils
 {

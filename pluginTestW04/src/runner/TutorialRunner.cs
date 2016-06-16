@@ -9,6 +9,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
+using pluginTestW04.narrator;
 using pluginTestW04.utils;
 
 namespace pluginTestW04.runner

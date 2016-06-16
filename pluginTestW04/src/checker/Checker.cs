@@ -14,6 +14,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
 using JetBrains.Util;
+using pluginTestW04.narrator;
 using pluginTestW04.utils;
 
 namespace pluginTestW04.checker

@@ -1,20 +1,16 @@
 ﻿using System;
-using System.ComponentModel;
-using JetBrains.Annotations;
 using JetBrains.DataFlow;
 using pluginTestW04.checker;
 
-namespace pluginTestW04
+namespace pluginTestW04.narrator
 {
 
     public enum NextStep { Auto, Manual }
 
     public delegate void StepIsDoneHandler(object sender, EventArgs e);
 
-    public class TutorialStep : INotifyPropertyChanged
-    {                
-        private string _text;        
-
+    public class TutorialStep 
+    {
         public int Id { get; }
         public string ProjectName { get;}
         public string FileName { get; }
@@ -24,6 +20,7 @@ namespace pluginTestW04
         public int TextToFindOccurrence { get; }
         public string Action { get; }
         public string Check;
+        public string Text { get; set; }
         /// <summary>
         /// If NextStep is specified as Manual or not specified, 
         /// a user can proceed to the next step ONLY by clicking the Next button. 
@@ -76,7 +73,7 @@ namespace pluginTestW04
             string textToFind, int textToFindOccurrence, string action, string check, string nextStep)
         {
             Id = li;
-            _text = text;
+            Text = text;
             FileName = file;
             TypeName = typeName;
             Action = action;
@@ -90,29 +87,7 @@ namespace pluginTestW04
             if (nextStep != null && nextStep.ToLower() == "auto") NextStep = NextStep.Auto;
             else NextStep = NextStep.Manual;                                   
         }
-
-
-        public string Text
-        {
-            get { return _text; }
-            set
-            {
-                if (value == _text)
-                    return;
-
-                _text = value;
-                OnPropertyChanged("Text");
-            }
-        }
-        
-        public event PropertyChangedEventHandler PropertyChanged;
-
-        [NotifyPropertyChangedInvocator]
-        protected virtual void OnPropertyChanged(string propertyName)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-        
+       
 
         protected virtual void OnStepIsDone()
         {

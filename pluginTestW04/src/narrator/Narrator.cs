@@ -13,7 +13,7 @@ using JetBrains.UI.Application;
 using pluginTestW04.utils;
 using tutorialUI;
 
-namespace pluginTestW04
+namespace pluginTestW04.narrator
 {    
 
     public class Narrator
