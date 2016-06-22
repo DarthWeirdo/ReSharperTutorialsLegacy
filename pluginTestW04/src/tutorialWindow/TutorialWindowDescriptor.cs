@@ -1,0 +1,31 @@
+﻿using JetBrains.Application;
+using JetBrains.Application.BuildScript.Application;
+using JetBrains.UI.ActionsRevised;
+using JetBrains.UI.ToolWindowManagement;
+
+namespace pluginTestW04.tutorialWindow
+{
+    [ToolWindowDescriptor(
+        ProductNeutralId = "TutorialWindow",
+        Text = "ReSharper Tutorial",
+        Type = ToolWindowType.SingleInstance,
+        VisibilityPersistenceScope = ToolWindowVisibilityPersistenceScope.Solution,
+        Icon = typeof(JetBrains.Ide.Resources.IdeThemedIcons.TextDocument),
+        InitialDocking = ToolWindowInitialDocking.Right        
+        )]
+    public class TutorialWindowDescriptor : ToolWindowDescriptor
+    {
+//        public TutorialWindowDescriptor(IApplicationHost host, IWindowBranding branding) : base(host, branding)
+//        {
+//        }
+
+        public TutorialWindowDescriptor(IApplicationHost host) : base(host)
+        {
+        }
+
+        [Action("Tutorial Window", Id = 101)]
+        public class ShowToolWindow : ActivateToolWindowActionHandler<TutorialWindowDescriptor>
+        {
+        }
+    }
+}

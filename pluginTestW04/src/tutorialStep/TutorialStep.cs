@@ -2,10 +2,10 @@
 using JetBrains.DataFlow;
 using pluginTestW04.checker;
 
-namespace pluginTestW04.narrator
+namespace pluginTestW04.tutorialStep
 {
 
-    public enum NextStep { Auto, Manual }
+    public enum GoToNextStep { Auto, Manual }
 
     public delegate void StepIsDoneHandler(object sender, EventArgs e);
 
@@ -22,10 +22,10 @@ namespace pluginTestW04.narrator
         public string Check;
         public string Text { get; set; }
         /// <summary>
-        /// If NextStep is specified as Manual or not specified, 
+        /// If GoToNextStep is specified as Manual or not specified, 
         /// a user can proceed to the next step ONLY by clicking the Next button. 
         /// </summary>
-        public NextStep NextStep { get; }               
+        public GoToNextStep GoToNextStep { get; }               
         
         private bool _isActionDone;
         private bool _isCheckDone;
@@ -70,7 +70,7 @@ namespace pluginTestW04.narrator
         
 
         public TutorialStep(int li, string text, string file, string projectName, string typeName, string methodName, 
-            string textToFind, int textToFindOccurrence, string action, string check, string nextStep)
+            string textToFind, int textToFindOccurrence, string action, string check, string goToNextStep)
         {
             Id = li;
             Text = text;
@@ -84,8 +84,8 @@ namespace pluginTestW04.narrator
             Check = check;
             _processingLifetime = null;
 
-            if (nextStep != null && nextStep.ToLower() == "auto") NextStep = NextStep.Auto;
-            else NextStep = NextStep.Manual;                                   
+            if (goToNextStep != null && goToNextStep.ToLower() == "auto") GoToNextStep = GoToNextStep.Auto;
+            else GoToNextStep = GoToNextStep.Manual;                                   
         }
        
 
@@ -96,10 +96,12 @@ namespace pluginTestW04.narrator
         }
 
 
-        public void PerformChecks(Narrator ownerNarrator)
-        {            
-            _processingLifetime = Lifetimes.Define(ownerNarrator.Lifetime);
-            var checker = new Checker(_processingLifetime.Lifetime, this, ownerNarrator.Solution, ownerNarrator.PsiFiles, ownerNarrator.TextControlManager, ownerNarrator.ShellLocks, ownerNarrator.EditorManager, ownerNarrator.DocumentManager, ownerNarrator.ActionManager, ownerNarrator.Environment);
+        public void PerformChecks(TutorialStepPresenter stepPresenter)
+        {
+            _processingLifetime = Lifetimes.Define(stepPresenter.Lifetime);
+
+            var checker = new Checker(_processingLifetime.Lifetime, this, stepPresenter.Solution, stepPresenter.PsiFiles, stepPresenter.TextControlManager, stepPresenter.ShellLocks, stepPresenter.EditorManager, stepPresenter.DocumentManager, stepPresenter.ActionManager, stepPresenter.Environment);
+
             checker.PerformStepChecks();
         }
     }

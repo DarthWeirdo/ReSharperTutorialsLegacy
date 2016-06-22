@@ -14,7 +14,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
 using JetBrains.Util;
-using pluginTestW04.narrator;
+using pluginTestW04.tutorialStep;
 using pluginTestW04.utils;
 
 namespace pluginTestW04.checker
@@ -129,49 +129,6 @@ namespace pluginTestW04.checker
         #region Typical Checks
 
         /// <summary>
-        /// Checks the FQN of type declaration, short name of method, or text of a generic tree node where the caret is placed at the moment
-        /// </summary>        
-        /// <typeparam name="T">ITypeDeclaration, or IMethodDeclaration, or ITreeNode</typeparam>        
-        /// <returns>Returns true if text of the node (or name of type or method) under the caret is equal $textOrName$ </returns>
-        private bool IsCaretOnTreeNode<T>(string textOrName)
-        {
-            var currentNode = _stepNavigationChecker.GetTreeNodeUnderCaret();
-            if (currentNode == null) return false;
-                        
-            if (IsSubclassOfRawGeneric(typeof (ITypeDeclaration), typeof (T)))
-            {
-                var typeElement = (ITypeElement) currentNode;
-                if (typeElement.GetFullClrName() == textOrName)                
-                    return true;                               
-            }
-            else if (IsSubclassOfRawGeneric(typeof(IMethodDeclaration), typeof(T)))
-            {
-                var methodDecl = (IMethodDeclaration) currentNode;
-                if (methodDecl.GetDeclaredShortName() == textOrName)                
-                    return true;                
-            }
-            else
-            {
-                if (currentNode.GetText() == textOrName)                
-                    return true;                
-            }
-            return false;
-        }
-
-
-        private static bool IsSubclassOfRawGeneric(Type generic, Type toCheck)
-        {
-            while (toCheck != null && toCheck != typeof(object))
-            {
-                var cur = toCheck.IsGenericType ? toCheck.GetGenericTypeDefinition() : toCheck;
-                if (generic == cur) return true;                               
-                toCheck = toCheck.BaseType;
-            }
-            return false;
-        }
-
-
-        /// <summary>
         /// Converts the entire IFile to string and checks whether it contains $text$
         /// </summary>                
         private bool StringExists(string text, string fileName = null)
@@ -279,18 +236,20 @@ namespace pluginTestW04.checker
             return TypeDeclarationExists("Tutorial1_EssentialShortcuts.BadlyNamedClass");
         }
 
+
         [RunCheck(OnEvent.PsiChange)]
         public bool CheckTutorial1Step3()
-        {
-            //            return TreeNodeWithTextExists("Format", 1);
+        {            
             return StringExists("string.Format");
         }
+
 
         [RunCheck(OnEvent.PsiChange)]
         public bool CheckTutorial1Step4()
         {
             return TypeDeclarationExists("Tutorial1_EssentialShortcuts.Renamed");
         }
+
 
         [RunCheck(OnEvent.CaretMove)]
         public bool CheckTutorial1Step5()

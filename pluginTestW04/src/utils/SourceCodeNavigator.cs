@@ -8,7 +8,7 @@ using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
-using pluginTestW04.narrator;
+using pluginTestW04.tutorialStep;
 
 namespace pluginTestW04.utils
 {
