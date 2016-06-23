@@ -15,6 +15,7 @@ using JetBrains.ProjectModel;
 using JetBrains.ReSharper.Psi;
 using JetBrains.ReSharper.Psi.Files;
 using JetBrains.TextControl;
+using JetBrains.Threading;
 using JetBrains.UI.ActionsRevised.Shortcuts;
 using JetBrains.UI.Application;
 using JetBrains.UI.CrossFramework;
@@ -69,10 +70,11 @@ A:visited {color: blue; cursor: hand; text-decoration: underline;}
         private string _stepText;
         private Button _buttonNext = new Button();
         private TutorialStepPresenter _stepPresenter;
+        private readonly Lifetime _lifetime;
         public string TutorialText { set { PrepareHtmlContent(value); } }
-        private EventHandler _buttonNextEventHandler;
+//        private EventHandler _buttonNextEventHandler;
 
-        public ISignal<bool> AfterButtonNextClicked { get; private set; }
+//        public ISignal<bool> AfterButtonNextClicked { get; private set; }
 
         public string StepText
         {
@@ -80,7 +82,12 @@ A:visited {color: blue; cursor: hand; text-decoration: underline;}
             set
             {
                 _stepText = value;
-                _viewControl.DocumentText = PrepareHtmlContent(_stepText);
+                _shellLocks.ExecuteOrQueue(_lifetime, "TutorialTextUpdate",
+                    () =>
+                    {
+                        _viewControl.DocumentText = PrepareHtmlContent(_stepText);
+                    });
+//                _shellLocks.TryExecuteWithReadLock((() => { _viewControl.DocumentText = PrepareHtmlContent(_stepText); }));
             }
         }
 
@@ -105,6 +112,7 @@ A:visited {color: blue; cursor: hand; text-decoration: underline;}
                                   ToolWindowManager toolWindowManager, TutorialWindowDescriptor toolWindowDescriptor,
                                   IWindowsHookManager windowsHookManager, IPsiServices psiServices, IActionShortcuts shortcutManager)
         {
+            _lifetime = lifetime;
             _solution = solution;
             _actionManager = actionManager;
             _shellLocks = shellLocks;
@@ -117,7 +125,7 @@ A:visited {color: blue; cursor: hand; text-decoration: underline;}
                     lifetime, null, null,
                     (lt, twi) =>
                     {
-                        AfterButtonNextClicked = new Signal<bool>(lt, "TutorialWindow.AfterButtonNextClicked");
+//                        AfterButtonNextClicked = new Signal<bool>(lt, "TutorialWindow.AfterButtonNextClicked");
 
                         var containerControl = new TutorialPanel(environment).BindToLifetime(lt);                        
 
@@ -125,7 +133,7 @@ A:visited {color: blue; cursor: hand; text-decoration: underline;}
                         {
                             BackColor = Color.White,
                             //DefaultTextControlSchemeManager.Instance.CodeEditorBackground,  
-                            DocumentText = InitialPage(),
+                            //DocumentText = InitialPage(),
                             Dock = DockStyle.Fill,                            
                         }.BindToLifetime(lt);
 

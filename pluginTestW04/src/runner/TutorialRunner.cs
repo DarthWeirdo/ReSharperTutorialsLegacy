@@ -48,7 +48,7 @@ namespace pluginTestW04.runner
             }                                              
         }
 
-        private void RunTutorial(string contentPath, Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,                                 
+        private static void RunTutorial(string contentPath, Lifetime lifetime, ISolution solution, IPsiFiles psiFiles,                                 
                                   TextControlManager textControlManager, IShellLocks shellLocks, IEditorManager editorManager, 
                                   DocumentManager documentManager, IUIApplication environment, IActionManager actionManager,
                                   ToolWindowManager toolWindowManager, TutorialWindowDescriptor tutorialWindowDescriptor,

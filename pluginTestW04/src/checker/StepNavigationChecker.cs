@@ -90,7 +90,6 @@ namespace pluginTestW04.checker
                 return null;
 
             var textControl = _textControlManager.LastFocusedTextControl.Value;
-
             if (textControl == null)
                 return null;
 
