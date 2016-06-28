@@ -75,6 +75,7 @@ namespace pluginTestW04.utils
                     var action = reader.GetAttribute("action");
                     var check = reader.GetAttribute("check");
                     var nextStep = reader.GetAttribute("nextStep");
+                    var strikeOnDone = Convert.ToBoolean(reader.GetAttribute("strikeOnDone"));
                     reader.ReadToFollowing("text");
                     var text = reader.ReadInnerXml();
                     text = Regex.Replace(text, @"\s+", " ");
@@ -84,7 +85,7 @@ namespace pluginTestW04.utils
                         throw new Exception("Tutorial content file is corrupted. Please reinstall the plugin.");
                     }
                     var step = new TutorialStep(li, text, file, projectName, typeName, methodName, textToFind, 
-                        textToFindOccurrence, action, check, nextStep);                    
+                        textToFindOccurrence, action, check, nextStep, strikeOnDone);                    
                     result.Add(li, step);
                 }
             }

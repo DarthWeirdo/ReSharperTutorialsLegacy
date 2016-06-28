@@ -11,59 +11,93 @@
   <steps>
     <step li="1" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.badlyNamedClass">
       <text>
-        <Run FontSize="20">Alt+Enter</Run> <LineBreak/>
-        Used to apply quick fixes to inspections ("squigglies"), or apply context specific actions, depending on location of text caret. Also allows searching and applying all ReSharper commands direct from the menu. <LineBreak/>
-        Icon is displayed in gutter margin on left of editor, e.g. yellow lightbulb to fix warning, red light bulb to fix error, hammer to context action, etc.
+        <h1>Alt+Enter</h1>
+        <p>Used to apply quick fixes to inspections ("squigglies"), or apply context specific actions, depending on location of text caret. Also allows searching and applying all ReSharper commands direct from the menu. </p>
+        <p>Icon is displayed in gutter margin on left of editor, e.g. yellow lightbulb to fix warning, red light bulb to fix error, hammer to context action, etc.</p>
       </text>
     </step>
     
-    <step li="2" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.badlyNamedClass" action="ReSharper_AltEnter" check="CheckTutorial1Step2" nextStep="Auto">
+    <step li="2" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.badlyNamedClass" action="ReSharper_AltEnter" check="CheckTutorial1Step2" nextStep="Auto" strikeOnDone ="true">
       <text>
-        <Run FontSize="20">Apply QuickFix for an inspection</Run><LineBreak/><LineBreak/>
-        The <Run FontFamily="Consolas">badlyNamedClass</Run> class doesn't match ReSharper's naming style! Let's fix this:<LineBreak/>
-        1. Place text caret on "squiggly". Note the lightbulb in the margin on the left.<LineBreak/>
-        2. Click the light bulb, or hit <Bold>Alt+Enter</Bold>.<LineBreak/>
-        3. Select <Bold>Rename to 'BadlyNamedClass'</Bold> to apply the fix.<LineBreak/>
+        <h1>Apply QuickFix for an inspection</h1>
+        <p>
+          The <code>badlyNamedClass</code> class doesn't match ReSharper's naming style! Let's fix this:
+        </p>
+        <ol>
+          <li>
+            Place text caret on "squiggly". Note the lightbulb in the margin on the left.</li>
+          <li>
+            Click the light bulb, or hit <b>Alt+Enter</b>.
+          </li>
+          <li>
+            Select <b>Rename to 'BadlyNamedClass'</b> to apply the fix.
+          </li>
+        </ol> 
       </text>
     </step>
 
-    <step li="3" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.ContextAction" method="FormatString" textToFind="arg" textToFindOccurrence ="2" action="ReSharper_AltEnter" check="CheckTutorial1Step3" nextStep="Auto">
+    <step li="3" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.ContextAction" method="FormatString" textToFind="arg" textToFindOccurrence ="2" action="ReSharper_AltEnter" check="CheckTutorial1Step3" nextStep="Auto" strikeOnDone ="true">
       <text>
-        <Run FontSize="20">Apply context action</Run><LineBreak/><LineBreak/>
-        1. Place text caret on <Run FontFamily="Consolas">arg</Run>. Note the hammer action - a context action is available.<LineBreak/>
-        2. Hit <Bold>Alt+Enter</Bold>.<LineBreak/>
-        3. Select <Bold>To String.Format invocation</Bold>.<LineBreak/>
+        <h1>Apply context action</h1>
+        <ol>
+          <li>
+            Place text caret on <code>arg</code>. Note the hammer action - a context action is available.
+          </li>
+          <li>
+            Hit <b>Alt+Enter</b>.
+          </li>
+          <li>
+            Select <b>To string.Format invocation</b>.
+          </li>
+        </ol>
       </text>
     </step>
 
-    <step li="4" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.GoToAction" action="ReSharper_AltEnter" check="CheckTutorial1Step4" nextStep="Auto">
+    <step li="4" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.GoToAction" action="ReSharper_AltEnter" check="CheckTutorial1Step4" nextStep="Auto" strikeOnDone ="true">
       <text>
-        <Run FontSize="20">Go to action</Run><LineBreak/><LineBreak/>
-        1. Place caret on <Run FontFamily="Consolas">GoToAction</Run> class name.<LineBreak/>
-        2. Hit <Bold>Alt+Enter</Bold>. Note the magnifying glass.<LineBreak/>
-        3. Start typing "rename".<LineBreak/>
-        4. Rename the class to <Run FontFamily="Consolas">Renamed</Run>.
+        <h1>Go to action</h1>
+        <ol>
+          <li>
+            Place caret on <code>GoToAction</code> class name.
+          </li>
+          <li>
+            Hit <b>Alt+Enter</b>. Note the magnifying glass.
+          </li>
+          <li>
+            Start typing "rename".
+          </li>
+          <li>
+            Rename the class to <code>Renamed</code>.
+          </li>
+        </ol>
       </text>
     </step>
 
-    <step li="5" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.BadlyNamedClass" textToFind="SomeClass" textToFindOccurrence ="1" action="ReSharper.ReSharper_GotoDeclaration" check="CheckTutorial1Step5" nextStep="Auto">
+    <step li="5" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" type="Tutorial1_EssentialShortcuts.BadlyNamedClass" textToFind="SomeClass" textToFindOccurrence ="1" action="ReSharper.ReSharper_GotoDeclaration" check="CheckTutorial1Step5" nextStep="Auto" strikeOnDone ="true">
       <text>
-        <Run FontSize="20">Go To Declaration</Run><LineBreak/><LineBreak/>
-        Say, we want to take a look at the <Run FontFamily="Consolas">SomeClass</Run> declaration.<LineBreak/>         
-        1. Place text caret on the <Run FontFamily="Consolas">SomeClass</Run> in the field declaration.<LineBreak/>
-        2. Hit <Bold>Ctrl + B</Bold> (VS) to navigate to type declaration.<LineBreak/>
+        <h1>Go To Declaration</h1>
+        <p>
+          Say, we want to take a look at the <code>SomeClass</code> declaration.
+        </p>
+        <ol>
+          <li>
+            Place text caret on the <code>SomeClass</code> in the field declaration.            
+          </li>
+          <li>
+            Hit <b>Ctrl + B</b> (VS) to navigate to type declaration.
+          </li>
+        </ol>
       </text>
     </step>          
     
     <step li="6" project="Tutorial1_EssentialShortcuts" file="Essentials.cs" >
       <text>
-        <Run FontSize="20">That's All!</Run><LineBreak/><LineBreak/>
-        Thanks for passing the tutorial. Now you can proceed to the next tutorial that will show you ReSharper navigation tricks.
+        <h1>That's All!</h1>
+        <p>
+          Thanks for passing the tutorial. Now you can proceed to the next tutorial that will show you ReSharper navigation tricks.
+        </p>
       </text>
-    </step>
-    
-    
-    
+    </step>           
   </steps>
   
 </tutorial>

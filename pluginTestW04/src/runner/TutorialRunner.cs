@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Windows;
 using JetBrains.ActionManagement;
 using JetBrains.Annotations;
 using JetBrains.Application;
@@ -12,6 +13,7 @@ using JetBrains.ReSharper.Psi.Files;
 using JetBrains.TextControl;
 using JetBrains.UI.ActionsRevised.Shortcuts;
 using JetBrains.UI.Application;
+using JetBrains.UI.Components.Theming;
 using JetBrains.UI.ToolWindowManagement;
 using pluginTestW04.tutorialWindow;
 using pluginTestW04.utils;
@@ -26,7 +28,8 @@ namespace pluginTestW04.runner
                                   [NotNull] GlobalSettings globalSettings, TextControlManager textControlManager, IShellLocks shellLocks,
                                   IEditorManager editorManager, DocumentManager documentManager, IUIApplication environment, 
                                   IActionManager actionManager, ToolWindowManager toolWindowManager, TutorialWindowDescriptor tutorialWindowDescriptor,
-                                  IWindowsHookManager windowsHookManager, IPsiServices psiServices, IActionShortcuts shortcutManager)
+                                  IWindowsHookManager windowsHookManager, IPsiServices psiServices, IActionShortcuts shortcutManager,
+                                  IColorThemeManager colorThemeManager)
         {
             if (lifetime == null)
                 throw new ArgumentNullException("lifetime");
@@ -43,7 +46,7 @@ namespace pluginTestW04.runner
                     solutionStateTracker.AfterPsiLoaded.Advise(lifetime, 
                     sol => RunTutorial(globalSettings.GetPath(tutorial.Key, PathType.WorkCopyContentFile), lifetime, solution, psiFiles, 
                         textControlManager, shellLocks, editorManager, documentManager, environment, actionManager, toolWindowManager, 
-                        tutorialWindowDescriptor, windowsHookManager, psiServices, shortcutManager));                    
+                        tutorialWindowDescriptor, windowsHookManager, psiServices, shortcutManager, colorThemeManager));                    
                 }
             }                                              
         }
@@ -52,16 +55,16 @@ namespace pluginTestW04.runner
                                   TextControlManager textControlManager, IShellLocks shellLocks, IEditorManager editorManager, 
                                   DocumentManager documentManager, IUIApplication environment, IActionManager actionManager,
                                   ToolWindowManager toolWindowManager, TutorialWindowDescriptor tutorialWindowDescriptor,
-                                  IWindowsHookManager windowsHookManager, IPsiServices psiServices, IActionShortcuts shortcutManager)
-        {            
+                                  IWindowsHookManager windowsHookManager, IPsiServices psiServices, IActionShortcuts shortcutManager,
+                                  IColorThemeManager colorThemeManager)
+        {                                
             var tutorialWindow = new TutorialWindow(contentPath, lifetime, solution, psiFiles, textControlManager, shellLocks, editorManager,
                 documentManager, environment, actionManager, toolWindowManager, tutorialWindowDescriptor, windowsHookManager,
-                psiServices, shortcutManager);
-
-            lifetime.AddBracket(
-                () => { toolWindowManager.Classes[tutorialWindowDescriptor].Instances[0].Show(true); },
-                () => { toolWindowManager.Classes[tutorialWindowDescriptor].Instances[0].Close(); });
+                psiServices, shortcutManager, colorThemeManager);
             
+            lifetime.AddBracket(
+                () => { tutorialWindow.Show(); },
+                () => { tutorialWindow.Close(); });
         }   
     }
 }

@@ -8,11 +8,13 @@ namespace pluginTestW04.tutorialWindow
     [ToolWindowDescriptor(
         ProductNeutralId = "TutorialWindow",
         Text = "ReSharper Tutorial",
-        Type = ToolWindowType.SingleInstance,
-        VisibilityPersistenceScope = ToolWindowVisibilityPersistenceScope.Solution,
         Icon = typeof(JetBrains.Ide.Resources.IdeThemedIcons.TextDocument),
-        InitialDocking = ToolWindowInitialDocking.Right        
-        )]
+        Type = ToolWindowType.SingleInstance,
+        VisibilityPersistenceScope = ToolWindowVisibilityPersistenceScope.Solution,        
+        InitialDocking = ToolWindowInitialDocking.Right)
+        ]
+
+
     public class TutorialWindowDescriptor : ToolWindowDescriptor
     {
 //        public TutorialWindowDescriptor(IApplicationHost host, IWindowBranding branding) : base(host, branding)

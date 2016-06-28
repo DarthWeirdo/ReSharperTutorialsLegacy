@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Windows;
+using JetBrains;
 using JetBrains.ActionManagement;
 using JetBrains.Application;
 using JetBrains.DataFlow;
@@ -12,6 +13,7 @@ using JetBrains.ReSharper.Psi.Files;
 using JetBrains.TextControl;
 using JetBrains.UI.ActionsRevised.Shortcuts;
 using JetBrains.UI.Application;
+using pluginTestW04.codeNavigator;
 using pluginTestW04.utils;
 
 namespace pluginTestW04.tutorialStep
@@ -110,7 +112,16 @@ namespace pluginTestW04.tutorialStep
 
         private void ShowText(TutorialStep step)
         {
-            _stepView.StepText = step.Text;            
+            var result = $"<div id =\"currentStep\">{step.Text}</div>";
+
+            if (step.Id > 1)
+            {
+                var prevStep = _steps[step.Id - 1];
+                if (prevStep.StrikeOnDone)                
+                    result = $"<div id=\"prevStep\">{prevStep.Text}</div> <div id=\"currentStep\">{step.Text}</div>";                
+            }
+
+            _stepView.StepText = result;
         }        
 
     }

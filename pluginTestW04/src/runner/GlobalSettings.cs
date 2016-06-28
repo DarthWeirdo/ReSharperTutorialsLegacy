@@ -55,7 +55,7 @@ namespace pluginTestW04.runner
                         case PathType.BaseSolutionFile:
                             return _commonTutorialPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
                         case PathType.BaseContentFile:
-                            return _commonTutorialPath + "\\Content\\Tutorial1\\Tutorial1HtmlContent.xml";
+                            return _commonTutorialPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";
                         case PathType.WorkCopySolutionFolder:
                             return _commonWorkCopyPath + "\\Tutorial1_EssentialShortcuts";
                         case PathType.WorkCopyContentFolder:
@@ -63,7 +63,7 @@ namespace pluginTestW04.runner
                         case PathType.WorkCopySolutionFile:
                             return _commonWorkCopyPath + "\\Tutorial1_EssentialShortcuts\\Tutorial1_EssentialShortcuts.sln";
                         case PathType.WorkCopyContentFile:
-                            return _commonWorkCopyPath + "\\Content\\Tutorial1\\Tutorial1HtmlContent.xml";                        
+                            return _commonWorkCopyPath + "\\Content\\Tutorial1\\Tutorial1Content.xml";                        
                         default:
                             throw new ArgumentOutOfRangeException(nameof(pType), pType, null);
                     }

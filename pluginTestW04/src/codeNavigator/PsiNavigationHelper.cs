@@ -16,9 +16,10 @@ using JetBrains.ReSharper.Psi.Files;
 using JetBrains.ReSharper.Psi.Paths;
 using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.Util;
+using pluginTestW04.utils;
 using PlatformID = JetBrains.Application.platforms.PlatformID;
 
-namespace pluginTestW04.utils
+namespace pluginTestW04.codeNavigator
 {
     public static class PsiNavigationHelper
     {        

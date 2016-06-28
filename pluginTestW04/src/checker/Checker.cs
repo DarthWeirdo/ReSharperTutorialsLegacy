@@ -14,6 +14,7 @@ using JetBrains.ReSharper.Psi.Tree;
 using JetBrains.TextControl;
 using JetBrains.UI.Application;
 using JetBrains.Util;
+using pluginTestW04.codeNavigator;
 using pluginTestW04.tutorialStep;
 using pluginTestW04.utils;
 

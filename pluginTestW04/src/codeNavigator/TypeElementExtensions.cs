@@ -7,7 +7,7 @@ using JetBrains.ReSharper.Feature.Services.Navigation;
 using JetBrains.ReSharper.Psi;
 using PlatformID = JetBrains.Application.platforms.PlatformID;
 
-namespace pluginTestW04.utils
+namespace pluginTestW04.codeNavigator
 {
     public static class TypeElementExtensions
     {

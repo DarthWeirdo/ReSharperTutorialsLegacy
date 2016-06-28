@@ -10,7 +10,7 @@ using JetBrains.TextControl;
 using JetBrains.UI.Application;
 using pluginTestW04.tutorialStep;
 
-namespace pluginTestW04.utils
+namespace pluginTestW04.codeNavigator
 {
     public class SourceCodeNavigator
     {

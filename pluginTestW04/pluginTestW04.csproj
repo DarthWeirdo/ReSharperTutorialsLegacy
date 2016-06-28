@@ -171,12 +171,13 @@
     <Compile Include="src\runner\GlobalSettings.cs" />
     <Compile Include="src\runner\SolutionStateTracker.cs" />
     <Compile Include="src\runner\TutorialRunnerEventArgs.cs" />
+    <Compile Include="src\tutorialWindow\Animator.cs" />
     <Compile Include="src\tutorialWindow\TutorialPanel.cs">
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="src\tutorialWindow\TutorialWindow.cs" />
     <Compile Include="src\tutorialWindow\TutorialWindowDescriptor.cs" />
-    <Compile Include="src\utils\SourceCodeNavigator.cs" />
+    <Compile Include="src\codeNavigator\SourceCodeNavigator.cs" />
     <Compile Include="src\checker\StepPsiChecker.cs" />
     <Compile Include="src\runner\TutorialRunner.cs" />
     <Compile Include="src\runner\ActionGroupOpenTutorial.cs" />
@@ -184,8 +185,8 @@
     <Compile Include="src\tutorialStep\TutorialStep.cs" />
     <Compile Include="src\utils\TutorialXmlReader.cs" />
     <Compile Include="src\utils\SolutionCopyHelper.cs" />
-    <Compile Include="src\utils\TypeElementExtensions.cs" />
-    <Compile Include="src\utils\PsiNavigationHelper.cs" />
+    <Compile Include="src\codeNavigator\TypeElementExtensions.cs" />
+    <Compile Include="src\codeNavigator\PsiNavigationHelper.cs" />
     <Compile Include="src\utils\VSCommunication.cs" />
     <Compile Include="ZoneMarker.cs" />
   </ItemGroup>
@@ -206,7 +207,6 @@
   <ItemGroup />
   <ItemGroup>
     <Content Include="TutorialsContent\Tutorial1\Tutorial1Content.xml" />
-    <Content Include="TutorialsContent\Tutorial1\Tutorial1HtmlContent.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <Import Project="..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets" Condition="Exists('..\packages\Antlr2.Tools.2.7.6.4\build\Antlr2.Tools.targets')" />

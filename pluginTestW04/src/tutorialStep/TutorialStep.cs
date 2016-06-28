@@ -19,7 +19,8 @@ namespace pluginTestW04.tutorialStep
         public string TextToFind { get; }
         public int TextToFindOccurrence { get; }
         public string Action { get; }
-        public string Check;
+        public string Check { get; }
+        public bool StrikeOnDone { get; }
         public string Text { get; set; }
         /// <summary>
         /// If GoToNextStep is specified as Manual or not specified, 
@@ -70,7 +71,7 @@ namespace pluginTestW04.tutorialStep
         
 
         public TutorialStep(int li, string text, string file, string projectName, string typeName, string methodName, 
-            string textToFind, int textToFindOccurrence, string action, string check, string goToNextStep)
+            string textToFind, int textToFindOccurrence, string action, string check, string goToNextStep, bool strkieOnDone)
         {
             Id = li;
             Text = text;
@@ -82,6 +83,7 @@ namespace pluginTestW04.tutorialStep
             MethodName = methodName;
             TextToFind = textToFind;            
             Check = check;
+            StrikeOnDone = strkieOnDone;
             _processingLifetime = null;
 
             if (goToNextStep != null && goToNextStep.ToLower() == "auto") GoToNextStep = GoToNextStep.Auto;
